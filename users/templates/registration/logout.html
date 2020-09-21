@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<title>'User`s verification'</title>
+{% endblock head %}
+
+{% block title %}'Logged out'{% endblock title %}
+
+{% block content %}
+<div class="container mt-4 mb-4">
+    <h1 class="text-center">'Logged out'</h1>
+    <div class="text-center">
+        <p>'You have been successfully logged out. You can' <a href="{% url 'users:login' %}"> 'log in again'.</a></p>
+    </div>
+</div>
+{% endblock content %}

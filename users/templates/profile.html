@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block head %}
+<title>'Profile'</title>
+{% endblock head %}
+{% block content %}
+<section class="main profile container-fluid d-flex align-items-center">
+  <div class="container justify-content-center py-4 py-md-0 mt-4">
+
+    <h1 class="text-uppercase section-heading text-dark text-center my-4 py-4">'Profile'</h1>
+
+    <form method="post" action="{% url 'users:profile' %}" enctype="multipart/form-data">
+      {% bootstrap_messages %}
+      {% csrf_token %}
+      <div class="row justify-content-between text-secondary py-4 py-md-0 py-4 flex-wrap">
+        <div class="col-12 col-md-auto pl-md-0 pr-md-4 pb-4 pb-md-0 text-center d-flex flex-column align-items-center justify-content-between">
+          {% if user.image %}
+          <img src="{{ user.image.url }}">
+          <div class="avatar mx-auto" style="background-image: url({{ user.image.url }});"></div>
+          {% else %}
+          <div class="avatar d-flex align-items-center justify-content-center text-uppercase mx-auto">'No photo'</div>
+          {% endif %}
+        </div>
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <div class="text-center">
+          <button class="btn btn-primary my-4" type="submit">'Save'</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load mptt_tags %}
+{% load static %}
+
+{% block title %}
+    {% if category %}{{ category.name }}{% else %}Речі{% endif %}
+{% endblock %}
+
+{% block content %}
+    <div id="sidebar">
+        <h3>Категорії</h3>
+        <ul>
+            <li {% if not category %}class="selected"{% endif %}>
+                <a href="{% url 'freestuff:things_list' %}">Всі категорії ({{ count }})</a>
+            </li>
+        </ul>
+
+        <ul class="root">
+            {% recursetree nodes %}
+                <li>
+                    <a href="{{ node.get_absolute_url }} ">{{ node.name }}  <span>({{ node.items_count }})</span></a>
+
+                    {% if not node.is_leaf_node %}
+                        <ul class="children">
+                            <li >
+                                <a href="{{ children.det_absolute_url }} "> {{ children }}</a>
+                            </li>
+                        </ul>
+
+                    {% endif %}
+                </li>
+            {% endrecursetree %}
+
+        </ul>
+
+    </div>
+    <div id="main" class="product-list">
+        <h2>{% if category %}{% for cat in category %}
+            {{ cat.name }} &#10149;
+        {% endfor %}
+        {% else %}Речі{% endif %}</h2>
+        {% for thing in things %}
+            <div class="item">
+                <a href="{{ thing.get_absolute_url }}">
+                    <img src="{% if thing.image %}{{ thing.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+                </a>
+                <a href="{{ thing.get_absolute_url }}">{{ thing.name }}</a><br>
+                {{ thing.quantity }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

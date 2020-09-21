@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block head %}
+<title>'Sign up' %</title>
+{% endblock head %}
+
+{% block content %}
+
+<h1>'Sign up'</h1>
+<form name='user_form' method="post">
+    <p>'Come up with a password that will be difficult to crack'</p>
+    {% csrf_token %}
+    <div>
+        {% bootstrap_field user_form.email %}
+    </div>
+    <div>
+        {% bootstrap_field user_form.password1 %}
+    </div>
+    <div>
+        {% bootstrap_field user_form.password2 %}
+    </div>
+    <div>
+        <button type="submit">Sign up</button>
+    </div>
+</form>
+</div>
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block head %}
+<title>'User`s verification'</title>
+{% endblock head %}
+
+{% block content %}
+<section class="main user_does_not_exist container-fluid d-flex align-items-center">
+    <div class="container justify-content-center py-4 py-md-0 mt-4">
+        <h1 class="text-center">trans "User does not exist"</h1>
+        <p>
+            User does not exist. We checked our database and unfortunately did not find you in it.Please go through the
+            <a href="{% url 'users:signup' %}">'registration process'</a>.
+            'Or contact with our'
+
+            'customer service'
+            </a>.
+        </p>
+    </div>
+</div>
+</section>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% load static %}
+{% autoescape off %}
+
+<html>
+  <title>'Registration Email'</title>
+  <body>
+    <div class="email-header">
+      <span class="email-header__text">'Sign Up'</span>
+      <img src="{% static 'img/logo.png' %}" class="email-header__logo" />
+    </div>
+
+    <div class="email-main">
+      <p>'Dear user'</p>
+
+      <p>
+
+          Мы отправили Вам это письмо, потому что Вы зарегистрировались в приложении AntiObesity или на нашем веб-сайте. Перейдите по ссылке, чтобы подтвердить свой адрес электронной почты:
+
+      </p>
+
+      <div class="email-button__wrapper">
+        <a href="{{ activate_url }}" class="email-button">
+          'Confirm Email'
+        </a>
+      </div>
+
+      <p>'If it was not you, please ignore this email.'</p>
+
+      <p class="email-footer">'the AntiObesity team'</p>
+    </div>
+  </body>
+
+
+</html>
+{% endautoescape %}

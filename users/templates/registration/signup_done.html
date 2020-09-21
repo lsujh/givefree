@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block head %}
+<title>trans 'Welcome'</title>
+{% endblock head %}
+
+{% block content %}
+<section class="main sign-up-done container-fluid d-flex align-items-center">
+    <div class="container dark justify-content-center py-4 py-md-0">
+        <h1 class="text-center">'Welcome', {{ new_user.email }}!</h1>
+        <p class="text-center">
+            We have sent you an email for confirm your account. Please contact us if you do not receive it within a few minutes.
+        </p>
+    </div>
+</section>
+{% endblock content %}

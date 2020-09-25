@@ -1,60 +1,76 @@
 body {
-    padding: 10px;
+    position: absolute;
+    left: 300; top: 150;
+    background-color: #b3ffb3;
+    font-size: 20;
 }
-
-img {
-    height: 200;
-    width: 200;
+.home, .we, .shop, .contacts {
+background-color: #ffb380;
+padding: 5;
+width: 16%;
 }
-
-.form {
-    display: inline-block;
-    padding: 25px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 500px;
+.home {
+    position: fixed;
+    left: 300; top: 0;
 }
-
-.form__field {
-    margin-bottom: 10px;
+.we {
+    position: fixed;
+    left: 500; top: 0;
 }
-
-.form__error {
-    color: red;
-    text-align: left;
-    font-size: 12px;
-    display: block;
-    margin-top: 3px;
-    display: none;
+.shop {
+    position: fixed;
+    left: 700; top: 0;
 }
-
-.form input {
-    outline: none;
-    display: block;
-    width: 100%;
-    border-radius: 5px;
-    border: 2px solid #ccc;
-    padding: 10px;
-    box-sizing: border-box;
+.contacts {
+    position: fixed;
+    left: 900; top: 0;
 }
-
-.form button {
-    width: 100%;
-    padding: 10px;
-    border-radius: 5px;
-    border: 2;
-    background-color: #ccc;
-    color: #fff;
+.hello {
+    font-size: 20pt;
+    position: absolute;
+    top: -90; right: 0;
 }
-
-input:valid:not(:placeholder-shown) {
-    border-color: green;
+a {
+    font-size: 30;
 }
-
-input:invalid:not(:placeholder-shown) {
-    border-color: red;
+.exit {
+    font-size: 25;
+    position: fixed;
+    top: 100; right: 10;
 }
-input:invalid:not(:placeholder-shown) + .form__error {
-    display: block;
+.registration {
+    font-size: 25;
+    position: fixed;
+    top: 50; right: 10;
+}
+.container1 {
+font-size: 25;
+}
+.password {
+position: absolute;
+top: 250; right: 10;
+}
+button {
+font-size: 20;
+}
+input {
+margin: 5;
+padding: 5;
+font-size: 20;
+}
+footer {
+position: absolute;
+right: -28; bottom: -158;
+width: 130%;
+background-color: gray;
+padding: 10;
+}
+.block {
+background-color: #ffa366;
+color: green;
+font-size: 30;
+position: fixed;
+left: 30; top: 0;
+padding: 40;
 }
 

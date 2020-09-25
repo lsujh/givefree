@@ -38,10 +38,10 @@ class CustomAuthenticationForm(forms.Form):
     )
     error_messages = {
         'invalid_login':
-            "Please enter a correct email and password. Note that both "
-            "fields may be case-sensitive."
+            "Будь ласка введіть правильну електронну адресу та пароль "
+
         ,
-        'inactive': "This account is inactive.",
+        'inactive': "This account is inactive",
     }
 
     def __init__(self, request=None, *args, **kwargs):

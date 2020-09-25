@@ -10,31 +10,38 @@
 </head>
 <body>
 <div id="header">
-    <a href="/" class="logo">{{ "Віддам безкоштовно" }}</a>
+<!--    <a href="/" class="logo">{{ "Віддам безкоштовно" }}</a>-->
 </div>
-<div>{% include 'freestuff/index.html' %}</div>
-Вітаємо {{ user.get_full_name|default:"Гість." }}{% if user.is_authenticated %}
-{% else %} Якщо Ви маєте акаунт - можете ввійти, якщо ні можете зареєтруватись.
-{% endif %}
+
+<!--<div class="hello">Вітаємо {{ user.get_full_name|default:"Гість." }}{% if user.is_authenticated %}-->
+<!--{% else %} Якщо Ви маєте акаунт - можете ввійти, якщо ні можете зареєструватись.-->
+<!--{% endif %}-->
+<!--</div>-->
 
 {% block menu %}
-<div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href=""> Головна </a>&nbsp;&nbsp;&nbsp;
-<a href=""> Про нас </a>&nbsp;&nbsp;&nbsp;
-<a href="{% url 'freestuff:things_list' %}"> Магазин </a>&nbsp;&nbsp;&nbsp;
-<a href=""> Контакти </a>&nbsp;&nbsp;&nbsp;
+<div class="menu">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<a class="home" href=""> Головна </a>&nbsp;&nbsp;&nbsp;
+<a class="we" href=""> Про нас </a>&nbsp;&nbsp;&nbsp;
+<a class="shop" href="{% url 'freestuff:things_list' %}"> Магазин </a>&nbsp;&nbsp;&nbsp;
+<a class="contacts" href=""> Контакти </a>&nbsp;&nbsp;&nbsp;
 
     {% if request.user.is_authenticated %}
 <a href="{% url 'users:logout' %}"> Вихід </a>&nbsp;&nbsp;&nbsp;
 <a href="{% url 'users:profile' %}"> Особистий кабінет </a>&nbsp;&nbsp;&nbsp;
     {% else %}
-    <a href="{% url 'users:login' %}"> Вхід </a>&nbsp;&nbsp;&nbsp;
-<a href="{% url 'users:signup' %}"> Реєстрація </a>
+    <a class="exit" href="{% url 'users:login' %}"> Вхід </a>&nbsp;&nbsp;&nbsp;
+<a class="registration" href="{% url 'users:signup' %}"> Зареєструватися </a>
     {% endif %}
     </div>
+<div class="block">
+    <p>G F</p>
+</div>
 {% endblock %}
 
 {% block content %} {% endblock %}
+<footer>
+    <string>2020</string><string>Всі права захищені</string>
+</footer>
 
 </body>
 </html>

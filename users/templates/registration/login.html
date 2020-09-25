@@ -2,31 +2,35 @@
 {% load bootstrap4 %}
 
 {% block head %}
-<title>'Log in'</title>
+
 {% endblock head %}
 
 {% block content %}
-<section class="main dark log-in container-fluid d-flex align-items-center pb-4">
-    <div class="container justify-content-center py-4 py-md-0">
+<section class="main dark log-in container-fluid d-flex align-items-center pb-4"></section>
+    <div class="container justify-content-center py-4 py-md-0"></div>
         {% if user.is_authenticated %}
         <h1 class="text-center">'You are logged in'</h1>
         {% else %}
-        <div>
-            <h2 class="text-center section-heading text-uppercase mb-4">'Log in'</h2>
+        <div class="container1">
+            <p class="text-center section-heading text-uppercase mb-4">Вхід</p>
 
             <form method="post">
-                <div class="text-light my-2">'Please, use the following form to log-in. If you don`t have an account',
-                    <a href="{% url 'users:signup' %}">' register here' </a>.
-                    <a href="{% url 'users:password_reset' %}"> 'Forgotten your password'?</a>
+                <div class="text-light my-2">
+                    <p>Будь ласка ввійдіть на сайт використовуючи свою електоронну пошту та пароль.</p>
+                    <string>Якщо Ви ще не зареєстровані, то можете</string>
+                    <a href="{% url 'users:signup' %}">зареєструватися тут </a>.
+                    <a class="password" href="{% url 'users:password_reset' %}"> Скинути пароль бо забули?</a>
+
                 </div>
                 
 
                 {% bootstrap_messages %}
                 {% csrf_token %}
-                {% bootstrap_form form %}
+                {% bootstrap_field form.username0 show_label=False %}
+                {% bootstrap_field form.password show_label=False %}
                 <div class="text-center">
                     <input type="hidden" name="next" value="{{ next }}">
-                    <button class="btn btn-primary mt-3" type="submit">'Log in'</button>
+                    <button class="btn btn-primary mt-3" type="submit">Ввійти</button>
                 </div>
             </form>
         </div>

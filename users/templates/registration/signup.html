@@ -7,9 +7,10 @@
 
 {% block content %}
 
-<h1>'Sign up'</h1>
+<div class="container1">
+<p>Реєстрація</p>
 <form name='user_form' method="post">
-    <p>'Come up with a password that will be difficult to crack'</p>
+    <p>Вкажіть адресу своєї електронної пошти та придумайте надійний пароль</p>
     {% csrf_token %}
     <div>
         {% bootstrap_field user_form.email %}
@@ -21,8 +22,8 @@
         {% bootstrap_field user_form.password2 %}
     </div>
     <div>
-        <button type="submit">Sign up</button>
+        <button type="submit">Реєстрація</button>
     </div>
 </form>
-</div>
+     </div>
 {% endblock content %}

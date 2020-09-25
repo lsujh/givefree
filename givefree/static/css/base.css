@@ -1,0 +1,75 @@
+body {
+    position: absolute;
+    left: 300; top: 150;
+    background-color: #b3ffb3;
+    font-size: 20;
+}
+.home, .we, .shop, .contacts {
+background-color: #ffb380;
+padding: 5;
+width: 16%;
+}
+.home {
+    position: fixed;
+    left: 300; top: 0;
+}
+.we {
+    position: fixed;
+    left: 500; top: 0;
+}
+.shop {
+    position: fixed;
+    left: 700; top: 0;
+}
+.contacts {
+    position: fixed;
+    left: 900; top: 0;
+}
+.hello {
+    font-size: 20pt;
+    position: absolute;
+    top: -90; right: 0;
+}
+a {
+    font-size: 30;
+}
+.exit {
+    font-size: 25;
+    position: fixed;
+    top: 100; right: 10;
+}
+.registration {
+    font-size: 25;
+    position: fixed;
+    top: 50; right: 10;
+}
+.container1 {
+font-size: 25;
+}
+.password {
+position: absolute;
+top: 250; right: 10;
+}
+button {
+font-size: 20;
+}
+input {
+margin: 5;
+padding: 5;
+font-size: 20;
+}
+footer {
+position: absolute;
+right: -28; bottom: -158;
+width: 130%;
+background-color: gray;
+padding: 10;
+}
+.block {
+background-color: #ffa366;
+color: green;
+font-size: 30;
+position: fixed;
+left: 30; top: 0;
+padding: 40;
+}

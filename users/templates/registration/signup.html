@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
 
 {% block head %}
 <title>'Sign up' %</title>
@@ -7,18 +8,21 @@
 
 {% block content %}
 
+
 <div class="container1">
 <p>Реєстрація</p>
 <form name='user_form' method="post">
     <p>Вкажіть адресу своєї електронної пошти та придумайте надійний пароль</p>
+
     {% csrf_token %}
-    <div>
+    <div class="form__field">
         {% bootstrap_field user_form.email %}
+
     </div>
-    <div>
+    <div class="form__field">
         {% bootstrap_field user_form.password1 %}
     </div>
-    <div>
+    <div class="form__field">
         {% bootstrap_field user_form.password2 %}
     </div>
     <div>

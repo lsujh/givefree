@@ -42,13 +42,18 @@ class OrderItemInline(admin.TabularInline):
     model = OrderItem
     raw_id_fields = ['thing']
 
+def order_pdf(obj):
+    return mark_safe('<a href="{}">PDF</a>'.format(
+        reverse('orders:admin_order_pdf', args=[obj.id])))
+order_pdf.short_description = 'Invoice'
+
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'first_name', 'last_name', 'email',
-                    'address', 'postal_code', 'city',
-                    'created', 'updates', order_detail]
+                    'created', 'status', order_detail]
     list_filter = ['created', 'updates']
+    list_editable = ['status']
     inlines = [OrderItemInline]
     actions = [export_to_csv]
 

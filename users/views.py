@@ -5,10 +5,12 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.utils.translation import get_language
 from django.contrib import messages
+from django.views.generic import ListView
 
 from .tasks import mail_send
 from .user_crypt import decoder
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ProfileForm, UserForm
+from orders.models import Order
 
 
 User = get_user_model()
@@ -71,15 +73,14 @@ def profile(request):
     return render(request, 'profile.html', {'user_form': user_form,
                                                      'profile_form': profile_form})
 
-# @login_required
-# def profile(request):
-#     form = ProfileForm(instance=request.user)
-#     if request.method == 'POST':
-#         form = ProfileForm(request.POST, instance=request.user)
-#         if form.is_valid():
-#             form.save()
-#     return render(request, 'profile.html', {'form': form})
 
+class HistoryOrdersView(ListView):
+    model = Order
+    template_name = 'history_orders.html'
+
+    def get_queryset(self):
+        queryset = Order.objects.filter(user=self.request.user.id)
+        return queryset
 
 class CustomLoginView(LoginView):
     form_class = CustomAuthenticationForm

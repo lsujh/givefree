@@ -1,6 +1,7 @@
 from mptt.models import MPTTModel, TreeForeignKey
 from django.db import models
 from django.urls import reverse
+from django.core.validators import MaxValueValidator
 
 
 class Category(MPTTModel):
@@ -39,6 +40,7 @@ class Things(models.Model):
     is_active=models.BooleanField('Показати/сховати', default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    price = models.DecimalField('Ціна', max_digits=10, decimal_places=2, blank=True, null=True, default=0)
 
     class Meta:
         verbose_name = 'Річ'

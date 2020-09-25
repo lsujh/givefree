@@ -1,5 +1,7 @@
 from decimal import Decimal
 from django.conf import settings
+from django.db.models import F
+
 from freestuff.models import Things
 from coupons.models import Coupon
 
@@ -9,6 +11,8 @@ class Cart(object):
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
+            if self.session.get('coupon_id'):
+                del self.session['coupon_id']
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
         self.coupon_id = self.session.get('coupon_id')
@@ -19,6 +23,9 @@ class Cart(object):
         cart = self.cart.copy()
         for thing in things:
             cart[str(thing.id)]['thing'] = thing
+            cart[str(thing.id)]['thing_price'] = thing.price
+            cart[str(thing.id)]['thing_quantity'] = thing.quantity
+
         for item in cart.values():
             item['price'] = Decimal(item['price'])
             item['total_price'] = item['price'] * item['quantity']
@@ -29,16 +36,18 @@ class Cart(object):
 
     def add(self, request, thing, price, quantity=1, update_quantity=False):
         thing_id = str(thing.pk)
-        print(quantity)
-        print(update_quantity)
         if thing_id not in self.cart:
             self.cart[thing_id] = {'quantity': 0, 'price': str(0)}
         if update_quantity:
+            Things.objects.filter(pk=thing.pk).update(quantity=F('quantity') - quantity +
+                                                               self.cart[thing_id]['quantity'])
             self.cart[thing_id]['quantity'] = quantity
             self.cart[thing_id]['price'] = price
         else:
+            Things.objects.filter(pk=thing.pk).update(quantity=F('quantity') - quantity)
             self.cart[thing_id]['quantity'] += quantity
             self.cart[thing_id]['price'] = price
+
         self.save()
 
     def save(self):
@@ -47,6 +56,7 @@ class Cart(object):
     def remove(self, thing):
         thing_id = str(thing.id)
         if thing_id in self.cart:
+            Things.objects.filter(pk=thing.pk).update(quantity=F('quantity') + self.cart[thing_id]['quantity'])
             del self.cart[thing_id]
             self.save()
 

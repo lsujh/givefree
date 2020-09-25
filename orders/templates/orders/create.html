@@ -1,4 +1,4 @@
-{% extends "freestuff/index.html" %}
+{% extends "base.html" %}
 {% load bootstrap4 %}
 
 {% block title %}
@@ -11,14 +11,24 @@
     <ul>
       {% for item in cart %}
         <li>
-          {{ item.quantity }}x {{ item.thing.name }}
+          {{ item.thing.name }} {{ item.quantity }} шт. по {{ item.price }} грн. = {{ item.total_price|floatformat:"2" }} грн.
         </li>
       {% endfor %}
     </ul>
+    <p>Всього: {{ cart.get_total_price|floatformat:"2" }} грн.</p>
   </div>
   <form action="." method="post" class="order-form">
-    {{ form.as_p }}
-   <p><input type="submit" value="Place order"></p>
     {% csrf_token %}
+    <p>{{ form.first_name.label }} {{ form.first_name }}</p>
+    <p>  {{ form.last_name.label }} {{ form.last_name }}</p>
+    <p>{{ form.email.label }} {{ form.email }}</p>
+    <p>{{ form.phone.label }} {{ form.phone }}</p>
+    <p>{{ form.address.label }} {{ form.address }}</p>
+    <p>{{ form.postal_code.label }} {{ form.postal_code }}</p>
+    <p>{{ form.city.label }} {{ form.city }}</p>
+    <p>{{ form.shipping.label }} {{ form.shipping }}</p>
+    <p>{{ form.department.label }} {{ form.department }}</p>
+   <p><input type="submit" value="Place order"></p>
+
   </form>
 {% endblock %}

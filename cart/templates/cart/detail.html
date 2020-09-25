@@ -6,19 +6,23 @@
 {% endblock %}
 {% block content %}
 <h1>Ваша корзина</h1>
+{% if cart %}
 <table class="cart">
     <thead>
     <tr>
         <th>Фото</th>
-        <th>Річ</th>
+        <th>Річ </th>
+
+        <th> В наявності</th>
         <th>Кількість</th>
         <th>Ціна</th>
         <th> &nbsp;</th>
         <th>Сума</th>
-        <th>Видалити</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
+
     {% for item in cart %}
     {% with thing=item.thing %}
     <tr>
@@ -27,9 +31,11 @@
                 <img src="{% if thing.image %}{{ thing.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
             </a>
         </td>
-        <td>{{ thing.name }}</td>
-        <form action="{% url 'cart:cart_add' thing.pk %}" method="post">
-        <td> {{ item.update_quantity_form.quantity }}</td>
+        <td>{{ thing.name }}: </td>
+        <td>{{ thing.quantity }} шт.</td>
+        <form action="{% url 'cart:cart_add' thing.pk %}" method="post" class="form">
+
+        <td>{{ request.session.form_error }}{{ item.update_quantity_form.quantity }}</td>
         <td> {{ item.update_quantity_form.price }}</td>
         <td>{{ item.update_quantity_form.update }}
             <input type="submit" value="Обновити">
@@ -44,23 +50,27 @@
 </table>
 {% if cart.get_total_price %}
 <p class="text-right">
-    <a href="{% url 'freestuff:things_list' %}" class="button light">Продовжити перегляд</a>
     <a href="{% url 'orders:order_create' %}" class="button">Оформити</a>
 </p>
 {% else %}
-<p>Apply a coupon:</p>
-<form action="{% url 'coupons:apply' %}" method="post">
+ {% if not request.session.coupon_id %}
+    <p>Apply a coupon:</p>
+    <form action="{% url 'coupons:apply' %}" method="post">
     {{ coupon_apply_form }}
     <input type="submit" value="Apply">
     {% csrf_token %}
-</form>
-<p class="text-right">
-    <a href="{% url 'freestuff:things_list' %}" class="button light">Продовжити перегляд</a>
-    {% if request.session.coupon_id %}
-    <a href="{% url 'orders:order_create' %}" class="button">Оформити</a></p>
-{% endif %}
-{% endif %}
+    </form>
+{% else %}
+    <p class="text-right">
 
+    <a href="{% url 'orders:order_create' %}" class="button">Оформити</a>
+    {% endif %}
+    </p>
+{% endif %}
+{% else %}
+<div>Порожня</div>
+{% endif %}
+<div><a href="{% url 'freestuff:things_list' %}" class="button light">Продовжити перегляд</a></div>
 <div>{% if recommender_things %}
     <div class="recommendations cart">
         <h3>"Люди купують ці речі разом"</h3>

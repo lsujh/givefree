@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block head %}
+<title>Історія замовлень</title>
+{% endblock head %}
+{% block content %}
+    <h1>Історія замовлень</h1>
+<ul>
+    {% for order in object_list %}
+    <li>
+{{ order.first_name }}
+{{ order.last_name }}
+    </li>
+{% endfor %}
+</ul>
+ {% endblock content %}

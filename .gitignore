@@ -1,4 +1,7 @@
-*/migrations/
-/logs/
-/media/
-/venv/
+.logs/
+.venv/
+.__pycache__/
+.idea/
+.media/
+.migrations/
+db.sqlite3

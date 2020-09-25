@@ -9,10 +9,9 @@ from django.dispatch import receiver
 from .managers import CustomUserManager
 
 
-
 class CustomUser(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    first_name = models.CharField("Ім'я",  max_length=30, validators=
+    first_name = models.CharField("Ім'я", max_length=30, validators=
                                     [MinLengthValidator(2), RegexValidator(r'^[-a-zA-ZА-Яа-я]+\Z', message='Enter your name')],
                                     help_text=None, error_messages={'required': 'Enter your name'}, blank=True)
     last_name = models.CharField('Прізвище', max_length=30, validators=

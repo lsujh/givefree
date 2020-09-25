@@ -19,11 +19,11 @@
                     <a href="{% url 'users:signup' %}">' register here' </a>.
                     <a href="{% url 'users:password_reset' %}"> 'Forgotten your password'?</a>
                 </div>
-                
 
                 {% bootstrap_messages %}
                 {% csrf_token %}
-                {% bootstrap_form form %}
+                {% bootstrap_field form.username show_label=False %}
+                {% bootstrap_field form.password show_label=False %}
                 <div class="text-center">
                     <input type="hidden" name="next" value="{{ next }}">
                     <button class="btn btn-primary mt-3" type="submit">'Log in'</button>

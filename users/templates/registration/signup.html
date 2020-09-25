@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
+{% load static %}
 
 {% block head %}
 <title>'Sign up' %</title>
@@ -8,16 +9,17 @@
 {% block content %}
 
 <h1>'Sign up'</h1>
-<form name='user_form' method="post">
+<form name='user_form' method="post" class="form">
     <p>'Come up with a password that will be difficult to crack'</p>
     {% csrf_token %}
-    <div>
+    <div class="form__field">
         {% bootstrap_field user_form.email %}
+
     </div>
-    <div>
+    <div class="form__field">
         {% bootstrap_field user_form.password1 %}
     </div>
-    <div>
+    <div class="form__field">
         {% bootstrap_field user_form.password2 %}
     </div>
     <div>

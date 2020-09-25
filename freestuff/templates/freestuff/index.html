@@ -1,35 +1,18 @@
-{% extends 'base.html' %}
 {% load static %}
 {% load mptt_tags %}
 
-<div id="content">
-    {% block content %}
-{% if messages %}
-<div class="messages">
-    {% for message in messages %}
-    <p class="{{ message.tags }}">
-        {{ message|safe }}
-
-    </p>
-    {% endfor %}
-</div>
-{% endif %}
-<div id="subheader">
-    <div class="cart">
+{% block content %}
+    <div >
         {% with total_items=cart|length %}
         {% if cart|length > 0 %}
         Ваш кошик:
         <a href="{% url 'cart:cart_detail' %}">
             {{ total_items }} шт. ,
             на {{ cart.get_total_price }} грн.</a>
-
         {% else %}
         Ваш кошик порожній.
         {% endif %}
         {% endwith %}
     </div>
-</div>
-
-
     {% endblock %}
-</div>
+

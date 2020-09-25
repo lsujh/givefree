@@ -12,9 +12,9 @@ class CategoryAdmin(MPTTModelAdmin):
 
 class ThingsAdmin(admin.ModelAdmin):
     ordering = ['-created']
-    list_display = ('name', 'category', 'quantity', 'created', 'is_active', 'id')
+    list_display = ('name', 'category', 'quantity', 'price', 'created', 'is_active', 'id')
     list_display_links = ('name', 'category',)
-    list_editable = ('is_active',)
+    list_editable = ('is_active', 'quantity', 'price')
     prepopulated_fields = {'slug': ('name',)}
     list_filter = (('category', TreeRelatedFieldListFilter),)
 

@@ -1,19 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}
 {{ thing.name }}
 {% endblock %}
 
 {% block content %}
+<h3>{% for crumb in breadcrumb %}
+<a href="{{ crumb.get_absolute_url }}">
+    {{ crumb }}</a> &#10149; {% endfor %}</h3>
 <div class="product-detail">
     <img src="{% if thing.image %}{{ thing.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
     <h1>{{ thing.name }}{{ name }}</h1>
-    <h2><a href="{{ thing.category.get_absolute_url }}">{{ thing.category }}</a></h2>
+
     {{ thing.quantity }}
     <div class="price">
     <form action="{% url 'cart:cart_add' thing.pk %}" method="post">
-    {{ cart_thing_form }}
+     <div>   {{ request.session.form_error }}
+         {{ cart_thing_form.quantity }}</div>
+    {{ cart_thing_form.price }}
     {% csrf_token %}
     <input type="submit" value="{{ 'Додати в кошик' }}">
     </form></div>

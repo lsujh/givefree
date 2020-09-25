@@ -26,7 +26,7 @@
 
                 {% bootstrap_messages %}
                 {% csrf_token %}
-                {% bootstrap_field form.username0 show_label=False %}
+                {% bootstrap_field form.username show_label=False %}
                 {% bootstrap_field form.password show_label=False %}
                 <div class="text-center">
                     <input type="hidden" name="next" value="{{ next }}">

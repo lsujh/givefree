@@ -1,4 +1,6 @@
 from mptt.models import MPTTModel, TreeForeignKey
+from easy_thumbnails.fields import ThumbnailerImageField
+
 from django.db import models
 from django.urls import reverse
 from django.core.validators import MaxValueValidator
@@ -35,12 +37,11 @@ class Things(models.Model):
     slug = models.SlugField(max_length=50, db_index=True)
     description = models.TextField('Опис', blank=True)
     size = models.PositiveIntegerField('Розмір', blank=True, null=True)
-    image = models.ImageField('Фото', upload_to='things/%Y/%m/%d', blank=True)
     quantity = models.PositiveIntegerField('Кількість', default=1)
     is_active=models.BooleanField('Показати/сховати', default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    price = models.DecimalField('Ціна', max_digits=10, decimal_places=2, blank=True, null=True, default=0)
+    price = models.DecimalField(verbose_name='Ціна', max_digits=5, decimal_places=0, blank=True, null=True, default=0)
 
     class Meta:
         verbose_name = 'Річ'
@@ -53,4 +54,13 @@ class Things(models.Model):
 
     def get_absolute_url(self):
         return reverse('freestuff:thing_detail', args=[self.pk, self.slug])
+
+class Images(models.Model):
+    thing = models.ForeignKey(Things, on_delete=models.CASCADE, related_name='images')
+    # image = models.ImageField(verbose_name='Фото', upload_to='things/%Y/%m/%d', blank=True)
+    main = models.BooleanField(verbose_name='Основна', default=False)
+    image = ThumbnailerImageField(upload_to='things/%Y/%m/%d',
+                                  resize_source=dict(quality=100,
+                                                     size=(1000, 1000),
+                                                     sharpen=True))
 

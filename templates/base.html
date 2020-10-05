@@ -5,43 +5,65 @@
 <html>
 <head>
     <meta charset="utf-8"/>
-    <title>{% block title %}{{ "Віддам безкоштовно" }}{% endblock %}</title>
-    <link href="{% static 'css/base.css' %}" rel="stylesheet">
+    <!--    <link href="{% static 'css/base.css' %}" rel="stylesheet">-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="{% static 'css/index.css' %}" rel="stylesheet">
+    <!--    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 </head>
 <body>
-<div id="header">
-<!--    <a href="/" class="logo">{{ "Віддам безкоштовно" }}</a>-->
-</div>
-
-<!--<div class="hello">Вітаємо {{ user.get_full_name|default:"Гість." }}{% if user.is_authenticated %}-->
-<!--{% else %} Якщо Ви маєте акаунт - можете ввійти, якщо ні можете зареєструватись.-->
-<!--{% endif %}-->
-<!--</div>-->
-
-{% block menu %}
-<div class="menu">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a class="home" href=""> Головна </a>&nbsp;&nbsp;&nbsp;
-<a class="we" href=""> Про нас </a>&nbsp;&nbsp;&nbsp;
-<a class="shop" href="{% url 'freestuff:things_list' %}"> Магазин </a>&nbsp;&nbsp;&nbsp;
-<a class="contacts" href=""> Контакти </a>&nbsp;&nbsp;&nbsp;
-
-    {% if request.user.is_authenticated %}
-<a href="{% url 'users:logout' %}"> Вихід </a>&nbsp;&nbsp;&nbsp;
-<a href="{% url 'users:profile' %}"> Особистий кабінет </a>&nbsp;&nbsp;&nbsp;
-    {% else %}
-    <a class="exit" href="{% url 'users:login' %}"> Вхід </a>&nbsp;&nbsp;&nbsp;
-<a class="registration" href="{% url 'users:signup' %}"> Зареєструватися </a>
-    {% endif %}
+<div class="card">
+    <div class="card-header">
+        <title>{% block title %}{{ "Віддам безкоштовно" }}{% endblock %}</title>
     </div>
-<div class="block">
-    <p>G F</p>
 </div>
+{% block menu %}
+<nav class="navbar navbar-expand-sm bg-light navbar-light fixed-top">
+    <a class="navbar-brand" href="#"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href=""> Головна </a>&nbsp;</li>
+            <li class="nav-item"><a class="nav-link" href=""> Про нас </a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'freestuff:things_list' %}"> Магазин </a>&nbsp;&nbsp;&nbsp;</li>
+            <li class="nav-item"><a class="nav-link" href=""> Контакти </a>&nbsp;&nbsp;&nbsp;</li>
+            {% if request.user.is_authenticated %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'users:logout' %}"> Вихід </a>&nbsp;&nbsp;&nbsp;</li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'users:profile' %}"> Особистий кабінет </a>&nbsp;&nbsp;&nbsp;</li>
+            {% else %}
+            <li class="nav-item">     <a class="nav-link" href="{% url 'users:login' %}"> Вхід </a>&nbsp;&nbsp;&nbsp;</li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'users:signup' %}"> Зареєструватися </a></li>
+            {% endif %}
+        </ul>
+
+    </div>
+    <form action="{% url 'freestuff:search_results' %}" method="get" class="form-inline">
+        <input name="q" type="text" placeholder="Пошук..." class="form-control mr-sm-2">
+        <button class="btn btn-outline-success" type="submit">Пошук</button>
+    </form>
+</nav>
 {% endblock %}
 
-{% block content %} {% endblock %}
-<footer>
-    <string>2020</string><string>Всі права захищені</string>
-</footer>
+{% block content %}
+{% endblock %}
+{% block footer %}
+<div class="container-fluid">
+    <div class="row">
+            <div class="footer fixed-bottom">
+                <div class="offset-md-1">
+                2020  Всі права захищені
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 
 </body>
 </html>

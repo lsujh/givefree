@@ -33,15 +33,15 @@ class Category(MPTTModel):
 class Things(models.Model):
     category = TreeForeignKey(
         'Category', related_name='things', on_delete=models.CASCADE)
-    name = models.CharField('Назва', max_length=50, db_index=True)
+    name = models.CharField(verbose_name='Назва', max_length=50, db_index=True)
     slug = models.SlugField(max_length=50, db_index=True)
-    description = models.TextField('Опис', blank=True)
-    size = models.PositiveIntegerField('Розмір', blank=True, null=True)
-    quantity = models.PositiveIntegerField('Кількість', default=1)
-    is_active=models.BooleanField('Показати/сховати', default=True)
+    description = models.TextField(verbose_name='Опис', blank=True)
+    size = models.PositiveIntegerField(verbose_name='Розмір', blank=True, default=0)
+    quantity = models.PositiveIntegerField(verbose_name='Кількість', default=1)
+    is_active=models.BooleanField(verbose_name='Показати/сховати', default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    price = models.DecimalField(verbose_name='Ціна', max_digits=5, decimal_places=0, blank=True, null=True, default=0)
+    price = models.DecimalField(verbose_name='Ціна', max_digits=5, decimal_places=0, blank=True, default=0)
 
     class Meta:
         verbose_name = 'Річ'

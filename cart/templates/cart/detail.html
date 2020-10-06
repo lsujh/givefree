@@ -56,15 +56,17 @@
                                     {% endif %}
                                     {% bootstrap_field item.update_quantity_form.quantity show_label=false %}
                                 </div>
+
                                 <div class="w-50">
-                                    {% bootstrap_field item.update_quantity_form.price %}
+                                   {% bootstrap_field item.update_quantity_form.price %}
                                 </div>
+
                                 <p class="text-primary mark lead font-weight-bold"> Сума: {{ item.total_price }} грн. </p>
                             </div>
                             <div class="col-sm-6">
                                 <div class="m-3">
                                     {{ item.update_quantity_form.update }}
-                                    <input type="submit" class="btn btn-outline-primary" value="Обновити">
+                                    <input type="submit" class="btn btn-outline-primary" value="Оновити">
                                 </div>
                                 <div class="m-3">
                                    <input type="submit" class="btn btn-outline-danger" name="_delete" value="Видалити">
@@ -86,23 +88,23 @@
             </div>
             {% if cart.get_total_price %}
             <div class="m-4">
-                <a href="{% url 'orders:order_create' %}" class="btn btn-outline-primary">Оформити</a>
+                <a href="{% url 'orders:order_create' %}" class="btn btn-outline-primary">Оформити замовлення</a>
             </div>
             {% else %}
             {% if not request.session.coupon_id %}
             <div class="m-4">
-                Apply a coupon:
+                За наявності промокоду введіть його:
                 <form action="{% url 'coupons:apply' %}" method="post">
                     {{ coupon_apply_form }}
                     <div class="mt-4">
-                        <input type="submit" class="btn btn-outline-info" value="Apply">
+                        <input type="submit" class="btn btn-outline-info" value="Готово">
                     </div>
                     {% csrf_token %}
                 </form>
             </div>
             {% else %}
             <div class="m-4">
-                <a href="{% url 'orders:order_create' %}" class="btn btn-outline-primary">Оформити</a>
+                <a href="{% url 'orders:order_create' %}" class="btn btn-outline-primary">Оформити замовлення</a>
             </div>
             {% endif %}
             {% endif %}

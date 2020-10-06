@@ -44,6 +44,7 @@ def cart_detail(request):
             initial={'quantity': item['quantity'], 'update': True, 'price': item['price'],})
         if not item['thing_price']:
             item['update_quantity_form'].fields['price'].widget.attrs['readonly'] = False
+            item['update_quantity_form'].fields['price'].__dict__['help_text'] = 'Введіть ціну, яку Ви готові заплатити'
     coupon_apply_form = CouponApplyForm()
     if cart:
         r = Recommender()

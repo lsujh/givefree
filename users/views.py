@@ -5,12 +5,10 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect
 from django.utils.translation import get_language
 from django.contrib import messages
-from django.views.generic import ListView
 
 from .tasks import mail_send
 from .user_crypt import decoder
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ProfileForm, UserForm
-from orders.models import Order
 
 
 User = get_user_model()
@@ -19,7 +17,7 @@ class PasswordReset(PasswordResetView):
     def form_valid(self, form):
         email = form.cleaned_data['email']
         if not User.objects.filter(email__iexact = email).exists():
-            messages.error(self.request, f"User with email {email} doesn\'t exists.")
+            messages.error(self.request, f"Користувач з таким email {email} не існує.")
             return render(self.request, 'registration/password_reset_form.html')
         return super().form_valid(form)
 
@@ -62,12 +60,12 @@ def profile(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Your profile was successfully updated!')
+            messages.success(request, 'Ваш профіль був успішно оновлений!')
             return render(request, 'profile.html', {'user_form': user_form,
                                                     'profile_form': profile_form,
                                                     })
         else:
-            messages.error(request, 'Please correct the error below.')
+            messages.error(request, 'Будь-ласка виправте помилку нижче.')
     else:
         user_form = UserForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
@@ -75,13 +73,6 @@ def profile(request):
                                                      'profile_form': profile_form})
 
 
-# class HistoryOrdersView(ListView):
-#     model = Order
-#     template_name = 'history_orders.html'
-#
-#     def get_queryset(self):
-#         queryset = Order.objects.filter(user=self.request.user.id)
-#         return queryset
 
 class CustomLoginView(LoginView):
     form_class = CustomAuthenticationForm

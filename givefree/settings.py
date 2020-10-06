@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'coupons.apps.CouponsConfig',
+    'pages.apps.PagesConfig',
 ]
 
 THUMBNAIL_ALIASES = {

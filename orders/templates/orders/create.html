@@ -26,9 +26,10 @@
               <div class="w-75">{% bootstrap_field form.region show_label=False %}</div>
               <div class="w-75">{% bootstrap_field form.province show_label=False %}</div>
               <div class="w-75">{% bootstrap_field form.postal_code show_label=False %}</div>
-              <div class="w-75" data-toggle="tooltip" data-placement="right" title="Перевізник">{% bootstrap_field form.shipping show_label=False %}</div>
+              <div class="w-75">{% bootstrap_field form.shipping %}</div>
               <div class="w-75">{% bootstrap_field form.department show_label=False %}</div>
-              <input type="submit" class="btn btn-outline-primary" value="Place order">
+              <div class="mb-3">*Обовязкові поля</div>
+              <input type="submit" class="btn btn-outline-primary" value="Зберегти">
             </div>
           </div>
         </div>
@@ -49,8 +50,5 @@
     </div>
   </div>
 </div>
-<script>
-$('[data-toggle="tooltip"]').tooltip();
-</script>
 {% endblock %}
 

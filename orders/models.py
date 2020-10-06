@@ -1,8 +1,8 @@
-from decimal import Decimal
-
 from django.db import models
-from freestuff.models import Things
+from django.core.validators import RegexValidator, MinLengthValidator
 
+
+from freestuff.models import Things
 from coupons.models import Coupon
 
 DELIVERY = (
@@ -22,16 +22,18 @@ ORDER_SRATUS = (
 
 class Order(models.Model):
     user = models.CharField('User', max_length=50, null=True, blank=True)
-    first_name = models.CharField(verbose_name="І'мя", max_length=30)
-    last_name = models.CharField(verbose_name='Прізвище', max_length=30)
-    email = models.EmailField(verbose_name='Email')
-    phone = models.PositiveIntegerField(verbose_name='Номер телефону')
+    first_name = models.CharField(verbose_name="І'мя*", max_length=30, validators=
+                                    [MinLengthValidator(2), RegexValidator(r'^[-a-zA-ZА-Яа-я]+\Z', message='Введіть Ваше Імʼя')],)
+    last_name = models.CharField(verbose_name='Прізвище*', max_length=30, validators=
+                                 [MinLengthValidator(2), RegexValidator(r'^[-a-zA-ZА-Яа-я]+\Z', message='Введіть Ваше Прізвище')],)
+    email = models.EmailField(verbose_name='Email*')
+    phone = models.PositiveIntegerField(verbose_name='Номер телефону*')
     street = models.CharField(verbose_name='Вулиця', max_length=50, null=True, blank=True)
-    postal_code = models.CharField(verbose_name='Індекс', max_length=20, null=True, blank=True)
-    city = models.CharField(verbose_name='Місто/село', max_length=50)
+    postal_code = models.CharField(verbose_name='Індекс*', max_length=20, null=True, blank=True)
+    city = models.CharField(verbose_name='Місто/село*', max_length=50)
     region = models.CharField(verbose_name='Район', max_length=50, blank=True, null=True)
     province = models.CharField(verbose_name='Область', max_length=50, blank=True, null=True)
-    shipping = models.CharField(verbose_name='Перевізник', max_length=20, choices=DELIVERY, blank=True, null=True)
+    shipping = models.CharField(verbose_name='Доставка*', max_length=20, choices=DELIVERY)
     department = models.PositiveIntegerField(verbose_name='відділення Нової пошти №', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     updates = models.DateTimeField(auto_now=True)

@@ -12,11 +12,11 @@ from .managers import CustomUserManager
 class CustomUser(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(verbose_name="Ім'я", max_length=30, validators=
-                                    [MinLengthValidator(2), RegexValidator(r'^[-a-zA-ZА-Яа-я]+\Z', message='Enter your name')],
-                                    help_text=None, error_messages={'required': 'Enter your name'}, blank=True)
+                                    [MinLengthValidator(2), RegexValidator(r'^[-a-zA-ZА-Яа-я]+\Z', message='Введіть Ваше Імʼя')],
+                                    blank=True)
     last_name = models.CharField(verbose_name='Прізвище', max_length=30, validators=
-                                 [MinLengthValidator(2), RegexValidator(r'^[-a-zA-ZА-Яа-я]+\Z', message='Enter your last name')],
-                                 help_text=None, error_messages={'required': 'Enter your last name'}, blank=True)
+                                 [MinLengthValidator(2), RegexValidator(r'^[-a-zA-ZА-Яа-я]+\Z', message='Введіть Ваше Прізвище')],
+                                 blank=True)
     image = models.ImageField(verbose_name='Фото', upload_to='image/', blank=True)
     email = models.EmailField(verbose_name='email адреса', unique=True)
     email_confirm = models.BooleanField(default=False)

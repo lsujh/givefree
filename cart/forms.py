@@ -8,7 +8,8 @@ class CartAddThingForm(forms.ModelForm):
     quantity = forms.IntegerField(initial=1, min_value=1, label='Кількість',
                                   widget=forms.NumberInput(attrs={'step': 1}))
     price = forms.DecimalField(max_digits=5, decimal_places=0, label='Ціна:',
-                               widget=forms.NumberInput(attrs={'readonly': True, 'step': 1}))
+                               widget=forms.NumberInput(attrs={'readonly': True, 'step': 1,
+                                                               }))
     update = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput)
     class Meta:
         model = Things

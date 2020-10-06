@@ -30,10 +30,10 @@
     </button>
     <div class="collapse navbar-collapse" id="collapsibleNavbar">
         <ul class="navbar-nav">
-            <li class="nav-item"><a class="nav-link" href=""> Головна </a>&nbsp;</li>
-            <li class="nav-item"><a class="nav-link" href=""> Про нас </a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'freestuff:things_list' %}"> Головна </a>&nbsp;</li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'pages:about' %}"> Про нас </a></li>
             <li class="nav-item"><a class="nav-link" href="{% url 'freestuff:things_list' %}"> Магазин </a>&nbsp;&nbsp;&nbsp;</li>
-            <li class="nav-item"><a class="nav-link" href=""> Контакти </a>&nbsp;&nbsp;&nbsp;</li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'pages:delivery' %}"> Оплата і доставка </a>&nbsp;&nbsp;&nbsp;</li>
             {% if request.user.is_authenticated %}
             <li class="nav-item"><a class="nav-link" href="{% url 'users:logout' %}"> Вихід </a>&nbsp;&nbsp;&nbsp;</li>
             <li class="nav-item"><a class="nav-link" href="{% url 'users:profile' %}"> Особистий кабінет </a>&nbsp;&nbsp;&nbsp;</li>
@@ -63,6 +63,10 @@
             </div>
         </div>
     </div>
+
+<script>
+$('[data-toggle="tooltip"]').tooltip();
+</script>
 {% endblock %}
 
 </body>

@@ -9,7 +9,7 @@ User = get_user_model()
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(label=False, widget=forms.EmailInput(attrs={
-                            'placeholder': 'Введіль email'}))
+                            'placeholder': 'Введіть email'}))
     password1 = forms.CharField(label=False, widget=forms.PasswordInput(attrs=
                             {'autocomplete': 'new-password',
                             'placeholder': 'Введіть пароль'}), strip=False)
@@ -37,20 +37,14 @@ class CustomAuthenticationForm(forms.Form):
         widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),
     )
     error_messages = {
-        'invalid_login':
-            "Будь ласка введіть правильну електронну адресу та пароль "
-
-        ,
-        'inactive': "This account is inactive",
+        'invalid_login': "Будь ласка введіть правильну електронну адресу та пароль ",
+        'inactive': "Цей акаунт активрваний",
     }
 
     def __init__(self, request=None, *args, **kwargs):
-
         self.request = request
         self.user_cache = None
         super().__init__(*args, **kwargs)
-
-        # Set the max length and label for the "username" field.
         self.username_field = User._meta.get_field(User.USERNAME_FIELD)
         username_max_length = self.username_field.max_length or 254
         self.fields['username'].max_length = username_max_length
@@ -65,7 +59,7 @@ class CustomAuthenticationForm(forms.Form):
         if not username or not password:
             raise forms.ValidationError(
                 self.error_messages['invalid_login'],
-                code='invalid_login or password',
+                code='Неправильний логін або пароль',
             )
 
         if username is not None and password:
@@ -74,13 +68,12 @@ class CustomAuthenticationForm(forms.Form):
                 raise self.get_invalid_login_error()
             else:
                 self.confirm_login_allowed(self.user_cache)
-
         return self.cleaned_data
 
     def confirm_login_allowed(self, user):
         if not user.is_active:
             raise forms.ValidationError(
-                self.error_messages['inactive'],
+                self.error_messages['не активний'],
                 code='inactive',
             )
 
@@ -89,7 +82,7 @@ class CustomAuthenticationForm(forms.Form):
 
     def get_invalid_login_error(self):
         return forms.ValidationError(
-            self.error_messages['invalid_login'],
+            self.error_messages['неправильний пароль'],
             code='invalid_login',
             params={'username': self.username_field.verbose_name},
         )

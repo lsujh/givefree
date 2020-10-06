@@ -54,6 +54,7 @@ def thing_detail(request, pk, slug):
     breadcrumb = thing.category.get_ancestors(include_self=True)
     if not thing.price:
         cart_thing_form.fields['price'].widget.attrs['readonly'] = False
+        cart_thing_form.fields['price'].__dict__['help_text'] = 'Введіть ціну, яку Ви готові заплатити'
     r = Recommender()
     recommended_things = r.suggest_things_for([thing], 4)
     return render(request, 'freestuff/detail.html',

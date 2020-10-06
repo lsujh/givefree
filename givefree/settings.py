@@ -29,7 +29,6 @@ ALLOWED_HOSTS = ['*', 'localhost', '34.121.77.125']
 # Application definition
 
 INSTALLED_APPS = [
-    'users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,6 +40,7 @@ INSTALLED_APPS = [
     'mptt',
     'easy_thumbnails',
 
+    'users.apps.UsersConfig',
     'freestuff.apps.FreestuffConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',

@@ -20,16 +20,13 @@ def mail_send(scheme, host, user_id):
     subject = 'Email Activation'
     template_name = "activation.html"
     from_email = settings.DEFAULT_FROM_EMAIL
-    recipients = [user.email]
-
-    # receive url with encoded data
-    context = encoder(scheme, host, user)
-
-    html_content = render_to_string(template_name, context)
-    html_content = translation.gettext(html_content)
-
-    email = EmailMultiAlternatives(subject, text_content, from_email, recipients)
-    email.attach_alternative(html_content, "text/html")
-    mail_sent = email.send()
-
-    return mail_sent
+    if user:
+        recipients = [user.email]
+        # receive url with encoded data
+        context = encoder(scheme, host, user)
+        html_content = render_to_string(template_name, context)
+        html_content = translation.gettext(html_content)
+        email = EmailMultiAlternatives(subject, text_content, from_email, recipients)
+        email.attach_alternative(html_content, "text/html")
+        mail_sent = email.send()
+        return mail_sent

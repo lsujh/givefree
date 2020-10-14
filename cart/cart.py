@@ -43,7 +43,8 @@ class Cart(object):
             self.cart[thing_id]['quantity'] = quantity
             self.cart[thing_id]['price'] = price
         else:
-            self.cart[thing_id]['quantity'] += quantity
+            self.cart[thing_id]['quantity'] = self.cart[thing_id]['quantity'] + (quantity
+                if self.cart[thing_id]['quantity'] < thing.quantity else 0)
             self.cart[thing_id]['price'] = price
 
         self.save()

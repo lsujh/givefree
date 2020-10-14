@@ -1,13 +1,10 @@
 import weasyprint
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.conf import settings
 from django.db.models import F
-
-
 
 from .models import OrderItem, Order
 from .forms import OrderCreateForm
@@ -21,6 +18,10 @@ from freestuff.models import Things
 def admin_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     return render(request, 'admin/detail.html', {'order': order})
+
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'orders/detail.html', {'order': order})
 
 def order_create(request):
     cart = Cart(request)
@@ -41,6 +42,8 @@ def order_create(request):
             order.user = request.user.id
             order.save()
             for item in cart:
+                if item['quantity'] > item['thing_quantity']:
+                    item['quantity'] = item['thing_quantity']
                 OrderItem.objects.create(
                     order=order, thing=item['thing'],
                     quantity=item['quantity'],
@@ -71,8 +74,7 @@ def order_create(request):
                 CustomUser.objects.filter(id=request.user.id).update(first_name=data['first_name'], last_name=data['last_name'],
                                                                      )
 
-
-            # order_created.delay(order.id)
+            order_created.delay(order.id)
             return render(request, 'orders/created.html', {'order': order})
 
     return render(request, 'orders/create.html', {'cart': cart, 'form': form})

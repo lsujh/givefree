@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-sm-4 offset-md-2">
+            <h3>Order {{ order.id }}</h3>
+        </div>
+        <div class="col-sm-2 offset-md-4">
+            <a href="#" onclick="window.print();">Print order</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4 offset-md-1">
+            <div class="table-responsive-sm">
+            <table class="table table-striped">
+                <tr>
+                    <th>Створений</th>
+                    <td>{{ order.created }}</td>
+                </tr>
+                <tr>
+                    <th>Покупець</th>
+                    <td>{{ order.first_name }} {{ order.last_name }}</td>
+                </tr>
+                <tr>
+                    <th>E-mail</th>
+                    <td>{{ order.email }}</td>
+                </tr>
+                <tr>
+                    <th>Адреса</th>
+                    <td>{{ order.street }} {{ order.postal_code }} {{ order.city }} {{ order.region }} {{ order.province }}</td>
+                </tr>
+                <tr>
+                    <th>Доставка</th>
+                    <td>{{ order.shipping }} {% if order.department %} відділення № {{ order.department }}{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Сума разом</th>
+                    <td>{{ order.get_total_cost }} грн.</td>
+                </tr>
+            </table>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-4 offset-md-2">
+        <h4>Деталі</h4>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-8 offset-md-1">
+        <div class="table-responsive-sm">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>річ</th>
+                <th>Ціна</th>
+                <th>Кількість</th>
+                <th>Сума</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in order.items.all %}
+            <tr class="row{% cycle '1' '2' %}">
+                <td>{{ item.thing.name }}</td>
+                <td class="num">{{ item.price }} грн.</td>
+                <td class="num">{{ item.quantity }}</td>
+                <td class="num">{{ item.get_cost }} грн.</td>
+            </tr>
+            {% endfor %}
+            <tr class="total">
+                <td colspan="3">сума</td>
+                <td class="num">{{ order.get_total_cost }} грн.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    </div>
+</div>
+{% endblock %}

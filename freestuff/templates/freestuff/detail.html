@@ -4,6 +4,7 @@
 {% load thumbnail %}
 {% load bootstrap4 %}
 
+
 {% block title %}
 {{ thing.name }}
 {% endblock %}
@@ -33,7 +34,8 @@
                     {% if image.main %}
                     <div class="row m-1 p-1">
                         <a data-fancybox="gallery" href="{{ image.image|thumbnail_url:'large' }}">
-                            <img src="{{ image.image|thumbnail_url:'small' }}" class="rounded img-fluid" >
+                            <img src="{{ image.image|thumbnail_url:'small' }}" class="rounded img-fluid"
+                            alt="{{ thing.name }}" title="{{ thing.name }}">
                         </a>
                     </div>
                     {% endif %}
@@ -50,7 +52,7 @@
                     {% endif %}
                 </div>
                 <div class="col-sm-8">
-                    <h3>{{ thing.name }}</h3>
+                    <h1>{{ thing.name }}</h1>
                     <div class="mb-2">
                         {% if thing.size %}
                     Розмір:  {{ thing.size }}

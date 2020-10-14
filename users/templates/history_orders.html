@@ -14,7 +14,9 @@
     </thead>
     {% for order in orders %}
     <tr>
-        <td>{{ order.id }}</td>
+        <td><a href="{% url 'orders:order_detail' order.id %}">
+            {{ order.id }}</a>
+        </td>
         <td>{{ order.first_name }}</td>
         <td>{{ order.last_name }}</td>
         <td>{{ order.created }}</td>

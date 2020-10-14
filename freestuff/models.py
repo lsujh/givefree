@@ -1,9 +1,9 @@
 from mptt.models import MPTTModel, TreeForeignKey
 from easy_thumbnails.fields import ThumbnailerImageField
+from meta.models import ModelMeta
 
 from django.db import models
 from django.urls import reverse
-from django.core.validators import MaxValueValidator
 
 
 class Category(MPTTModel):
@@ -15,7 +15,6 @@ class Category(MPTTModel):
     class MPTTMeta:
         verbose_name = 'Категорія'
         verbose_name_plural = 'Категорії'
-        #ordering = ('name',)
         order_insertion_by = ['name']
 
     def __str__(self):
@@ -30,7 +29,7 @@ class Category(MPTTModel):
         return Things.objects.filter(category_id__in=ids).count()
 
 
-class Things(models.Model):
+class Things(ModelMeta, models.Model):
     category = TreeForeignKey(
         'Category', related_name='things', on_delete=models.CASCADE)
     name = models.CharField(verbose_name='Назва', max_length=50, db_index=True)
@@ -42,6 +41,7 @@ class Things(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     price = models.DecimalField(verbose_name='Ціна', max_digits=5, decimal_places=0, blank=True, default=0)
+    keywords = models.CharField(blank=True, max_length=500)
 
     class Meta:
         verbose_name = 'Річ'
@@ -55,12 +55,29 @@ class Things(models.Model):
     def get_absolute_url(self):
         return reverse('freestuff:thing_detail', args=[self.pk, self.slug])
 
-class Images(models.Model):
-    thing = models.ForeignKey(Things, on_delete=models.CASCADE, related_name='images')
-    # image = models.ImageField(verbose_name='Фото', upload_to='things/%Y/%m/%d', blank=True)
-    main = models.BooleanField(verbose_name='Основна', default=False)
-    image = ThumbnailerImageField(upload_to='things/%Y/%m/%d',
-                                  resize_source=dict(quality=100,
-                                                     size=(1000, 1000),
-                                                     sharpen=True))
+    # def save(self, *args, **kwargs):
+    #     self.keywords = []
+    #     self.keywords += self.name
+    #     self.keywords += self.category.name
+    #     super(self.__class__, self).save(*args, **kwargs)
 
+
+    _metadata = {
+        'title': 'name',
+        'description': 'description',
+    }
+
+
+class Images(ModelMeta, models.Model):
+    thing = models.ForeignKey(Things, on_delete=models.CASCADE, related_name='images')
+    main = models.BooleanField(verbose_name='Основна', default=False)
+    image = ThumbnailerImageField(verbose_name='Фото', upload_to='things/%Y/%m/%d',
+                                  resize_source=dict(quality=100, size=(1000, 1000), sharpen=True))
+
+    _metadata = {
+        'image': 'get_meta_image',
+    }
+
+    def get_meta_image(self):
+        if self.image:
+            return self.image.image

@@ -16,7 +16,7 @@ class ImagesInline(admin.StackedInline):
 
 class ThingsAdmin(admin.ModelAdmin):
     ordering = ['-created']
-    list_display = ('name', 'category', 'quantity', 'price', 'created', 'is_active', 'id')
+    list_display = ('name', 'category', 'quantity', 'price', 'created', 'is_active', 'id', 'keywords')
     list_display_links = ('name', 'category',)
     list_editable = ('is_active', 'quantity', 'price')
     prepopulated_fields = {'slug': ('name',)}

@@ -1,5 +1,4 @@
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView
 from django.db.models import Q
 from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
 
@@ -49,25 +48,14 @@ def things_list(request, category_slug=None, category_pk=None):
 
 
 def thing_detail(request, pk, slug):
-    thing = get_object_or_404(Things, pk=pk, slug=slug)
-    cart_thing_form = CartAddThingForm(initial={'price': thing.price})
-    breadcrumb = thing.category.get_ancestors(include_self=True)
-    if not thing.price:
-        cart_thing_form.fields['price'].widget.attrs['readonly'] = False
-        cart_thing_form.fields['price'].__dict__['help_text'] = 'Введіть ціну, яку Ви готові заплатити'
+    context = {}
+    context['thing'] = get_object_or_404(Things, pk=pk, slug=slug)
+    context['meta'] = context['thing'].as_meta()
+    context['cart_thing_form'] = CartAddThingForm(initial={'price': context['thing'].price})
+    context['breadcrumb'] = context['thing'].category.get_ancestors(include_self=True)
+    if not context['thing'].price:
+        context['cart_thing_form'].fields['price'].widget.attrs['readonly'] = False
+        context['cart_thing_form'].fields['price'].__dict__['help_text'] = 'Введіть ціну, яку Ви готові заплатити'
     r = Recommender()
-    recommended_things = r.suggest_things_for([thing], 4)
-    return render(request, 'freestuff/detail.html',
-                  {'thing': thing, 'breadcrumb': breadcrumb,
-                   'cart_thing_form': cart_thing_form,
-                   'recommended_things': recommended_things,
-                   })
-
-
-# class SearchResultsView(ListView):
-#     model = Things
-#     template_name = 'freestuff/search_results.html'
-#     def get_queryset(self):
-#         query = self.request.GET.get('q')
-#         object_list = Things.objects.filter(Q(name__icontains=query)|Q(description__icontains=query))
-#         return object_list
+    context['recommended_things'] = r.suggest_things_for([context['thing']], 4)
+    return render(request, 'freestuff/detail.html', context)

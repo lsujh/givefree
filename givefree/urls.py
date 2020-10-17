@@ -5,6 +5,7 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 
 from freestuff.sitemaps import ThingsSitemap
+from freestuff.views import robots_txt
 
 sitemaps = {'things': ThingsSitemap,}
 
@@ -17,6 +18,7 @@ urlpatterns = [
     path('pages/', include('pages.urls', namespace='pages')),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('', include('freestuff.urls', namespace='freestuff')),
+    path('robots.txt', robots_txt),
 ]
 
 

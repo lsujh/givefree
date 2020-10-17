@@ -1,10 +1,25 @@
 from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
+from django.http import HttpResponse
+from django.views.decorators.http import require_GET
 
 from .models import Category, Things
 from cart.forms import CartAddThingForm
 from .recommender import Recommender
+
+
+@require_GET
+def robots_txt(request):
+    lines = [
+        'User-Agent: *',
+        'Disallow: /admin/',
+        'Disallow: /account/',
+        'Disallow: /orders/',
+        'Disallow: /coupons/',
+        'Disallow: /cart/',
+    ]
+    return HttpResponse("\n".join(lines), content_type='text/plain')
 
 
 def things_list(request, category_slug=None, category_pk=None):
@@ -50,6 +65,7 @@ def things_list(request, category_slug=None, category_pk=None):
 def thing_detail(request, pk, slug):
     context = {}
     context['thing'] = get_object_or_404(Things, pk=pk, slug=slug)
+    # print(context['thing'].keywords)
     context['meta'] = context['thing'].as_meta()
     context['cart_thing_form'] = CartAddThingForm(initial={'price': context['thing'].price})
     context['breadcrumb'] = context['thing'].category.get_ancestors(include_self=True)

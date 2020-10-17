@@ -5,6 +5,47 @@ from meta.models import ModelMeta
 from django.db import models
 from django.urls import reverse
 
+from typing import Iterable
+
+class ListField(models.TextField):
+
+    def __init__(self, *args, **kwargs):
+        self.token = kwargs.pop('token', ',')
+        super().__init__(*args, **kwargs)
+
+    def deconstruct(self):
+        name, path, args, kwargs = super().deconstruct()
+        kwargs['token'] = self.token
+        return name, path, args, kwargs
+
+    def to_python(self, value):
+        class SubList(list):
+            def __init__(self, token, *args):
+                self.token = token
+                super().__init__(*args)
+
+            def __str__(self):
+                return self.token.join(self)
+
+        if isinstance(value, list):
+            return value
+        if value is None:
+            return SubList(self.token)
+        return SubList(self.token, value.split(self.token))
+
+    def from_db_value(self, value, expression, connection):
+        return self.to_python(value)
+
+    def get_prep_value(self, value):
+        if not value:
+            return
+        assert(isinstance(value, Iterable))
+        return self.token.join(set(value))
+
+    def value_to_string(self, obj):
+        value = self.value_from_object(obj)
+        return self.get_prep_value(value)
+
 
 class Category(MPTTModel):
     parent = TreeForeignKey('self', verbose_name='Батьківська категорія', related_name='children',
@@ -41,7 +82,7 @@ class Things(ModelMeta, models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     price = models.DecimalField(verbose_name='Ціна', max_digits=5, decimal_places=0, blank=True, default=0)
-    keywords = models.CharField(blank=True, max_length=500)
+    keywords = ListField()
 
     class Meta:
         verbose_name = 'Річ'
@@ -55,16 +96,18 @@ class Things(ModelMeta, models.Model):
     def get_absolute_url(self):
         return reverse('freestuff:thing_detail', args=[self.pk, self.slug])
 
-    # def save(self, *args, **kwargs):
-    #     self.keywords = []
-    #     self.keywords += self.name
-    #     self.keywords += self.category.name
-    #     super(self.__class__, self).save(*args, **kwargs)
-
+    def save(self, *args, **kwargs):
+        self.keywords.append(self.name.split()[0].lower())
+        cat_name = Category.objects.get(name=self.category.name).get_ancestors(include_self=True)\
+            .values_list('name', flat=True)
+        for name in cat_name:
+            self.keywords.append(name.lower())
+        super(self.__class__, self).save(*args, **kwargs)
 
     _metadata = {
         'title': 'name',
         'description': 'description',
+        'keywords': 'keywords',
     }
 
 

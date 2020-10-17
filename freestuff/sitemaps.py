@@ -4,7 +4,7 @@ from .models import Things
 
 
 class ThingsSitemap(Sitemap):
-    changefreq = "always"
+    changefreq = 'always'
     priority = 0.9
 
     def items(self):

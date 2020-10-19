@@ -4,15 +4,14 @@
 {% load thumbnail %}
 {% load bootstrap4 %}
 
-
-{% block title %}
-{{ thing.name }}
-{% endblock %}
+{% block head %}
+<title>{{ thing.name }}</title>
+{% endblock head %}
 
 {% block content %}
-<div class="container-fluid" style="margin-top:50px">
+<div class="container-fluid mt-5 pt-5" >
     <div class="row">
-        <div class="col-sm-2 offset-md-9"></div>
+        <div class="col-sm-2 offset-md-7"></div>
         <div class="col-sm-3">
             {% include 'freestuff/index.html' %}
         </div>

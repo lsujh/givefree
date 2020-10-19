@@ -85,10 +85,10 @@ DATABASES = {
     'default': {
         'ENGINE': config('DATABASE_ENGINE', default='django.db.backends.sqlite3'),
         'NAME': config('DATABASE_NAME', default='db.sqlite3'),
-        'USER': config('DATABASE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': config('DATABASE_HOST'),
-        'PORT': config('DATABASE_PORT', cast=int),
+        'USER': config('DATABASE_USER', default=None),
+        'PASSWORD': config('DATABASE_PASSWORD', default=None),
+        'HOST': config('DATABASE_HOST', default=None),
+        'PORT': config('DATABASE_PORT', cast=int, default=0),
     }
 }
 
@@ -193,11 +193,11 @@ LOGGING = {
 }
 
 EMAIL_BACKEND = config('EMAIL_BACKEND', default='django.core.mail.backends.console.EmailBackend')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = config('EMAIL_PORT', cast=int)
-EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool)
+EMAIL_HOST = config('EMAIL_HOST', default=None)
+EMAIL_HOST_USER = config('EMAIL_HOST_USER', default=None)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD', default=None)
+EMAIL_PORT = config('EMAIL_PORT', cast=int, default=0)
+EMAIL_USE_TLS = config('EMAIL_USE_TLS', cast=bool, default=False)
 SERVER_EMAIL = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 

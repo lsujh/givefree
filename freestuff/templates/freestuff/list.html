@@ -4,12 +4,8 @@
 {% load thumbnail %}
 {% load bootstrap4 %}
 
-{% block title %}
-{% if category %}{{ category.name }}{% else %}Речі{% endif %}
-{% endblock %}
-
 {% block content %}
-<div class="container-fluid mt-5">
+<div class="container-fluid mt-5 pt-5">
     <div class="row">
         <div class="col-sm-3 offset-md-9">
             {% include 'freestuff/index.html' %}
@@ -57,7 +53,7 @@
                             <div class="row">
                                 <div class="img-wrap">
                                     <img src="{{ image.image|thumbnail_url:'avatar' }}" class="rounded img-thumbnail img-fluid"
-                                         width="200" height="200">
+                                         width="200" height="200" alt="{{ thing.name }}" title="{{ thing.name }}">
                                     <span class="p-3 font-italic text-info text-center">
                                     {% if thing.pk in cart_pk %}
                                     Ця річ вже є в Вашому кошику

@@ -43,4 +43,4 @@ WeasyPrint==51
 webencodings==0.5.1
 whitenoise==5.2.0
 yarg==0.1.9
-
+python-decouple==3.3

@@ -5,7 +5,7 @@
 {% endblock head %}
 
 {% block content %}
-<div class="container justify-content-center  mt-4">
+<div class="container justify-content-center  mt-4 pt-4">
     {% if user.is_active %} {% if reuqest.user.is_authenticated %}
     <a class="text-center" href="{% url 'user:profile' %}">Перейти в профіль</a>
     {% else %}

@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model, authenticate
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, UsernameField
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, UsernameField, \
+    AuthenticationForm
 from django.utils.text import capfirst
 
 from .models import Profile
@@ -28,64 +29,18 @@ class CustomUserChangeForm(UserChangeForm):
         fields = ('email', 'first_name', 'last_name', 'image')
 
 
-class CustomAuthenticationForm(forms.Form):
-    username = UsernameField(required=False, widget=forms.TextInput(attrs={'autofocus': True}))
+class CustomAuthenticationForm(AuthenticationForm):
+    username = UsernameField(widget=forms.TextInput(attrs={'autofocus': True}))
     password = forms.CharField(
-        required=False,
         label="Password",
         strip=False,
         widget=forms.PasswordInput(attrs={'autocomplete': 'current-password'}),
     )
+
     error_messages = {
-        'invalid_login': "Будь ласка введіть правильну електронну адресу та пароль ",
-        'inactive': "Цей акаунт активрваний",
-    }
-
-    def __init__(self, request=None, *args, **kwargs):
-        self.request = request
-        self.user_cache = None
-        super().__init__(*args, **kwargs)
-        self.username_field = User._meta.get_field(User.USERNAME_FIELD)
-        username_max_length = self.username_field.max_length or 254
-        self.fields['username'].max_length = username_max_length
-        self.fields['username'].widget.attrs['maxlength'] = username_max_length
-        if self.fields['username'].label is None:
-            self.fields['username'].label = capfirst(self.username_field.verbose_name)
-
-    def clean(self):
-        username = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
-
-        if not username or not password:
-            raise forms.ValidationError(
-                self.error_messages['invalid_login'],
-                code='Неправильний логін або пароль',
-            )
-
-        if username is not None and password:
-            self.user_cache = authenticate(self.request, username=username, password=password)
-            if self.user_cache is None:
-                raise self.get_invalid_login_error()
-            else:
-                self.confirm_login_allowed(self.user_cache)
-        return self.cleaned_data
-
-    def confirm_login_allowed(self, user):
-        if not user.is_active:
-            raise forms.ValidationError(
-                self.error_messages['не активний'],
-                code='inactive',
-            )
-
-    def get_user(self):
-        return self.user_cache
-
-    def get_invalid_login_error(self):
-        return forms.ValidationError(
-            self.error_messages['неправильний пароль'],
-            code='invalid_login',
-            params={'username': self.username_field.verbose_name},
-        )
+        'invalid_login':
+            "Будь ласка введіть правильну електронну адресу та пароль.",
+        'inactive': "Цей акаунт не активований.",}
 
 class UserForm(forms.ModelForm):
     class Meta:

@@ -1,11 +1,14 @@
 from mptt.models import MPTTModel, TreeForeignKey
 from easy_thumbnails.fields import ThumbnailerImageField
 from meta.models import ModelMeta
+from typing import Iterable
 
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 
-from typing import Iterable
+
+User = get_user_model()
 
 class ListField(models.TextField):
 
@@ -72,23 +75,28 @@ class Category(MPTTModel):
 
 class Things(ModelMeta, models.Model):
     category = TreeForeignKey(
-        'Category', related_name='things', on_delete=models.CASCADE)
+        'Category', related_name='things', on_delete=models.CASCADE, verbose_name='Категорія')
     name = models.CharField(verbose_name='Назва', max_length=50, db_index=True)
     slug = models.SlugField(max_length=50, db_index=True)
     description = models.TextField(verbose_name='Опис', blank=True)
     size = models.PositiveIntegerField(verbose_name='Розмір', blank=True, default=0)
     quantity = models.PositiveIntegerField(verbose_name='Кількість', default=1)
-    is_active=models.BooleanField(verbose_name='Показати/сховати', default=True)
+    is_active=models.BooleanField(verbose_name='Активний', default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     price = models.DecimalField(verbose_name='Ціна', max_digits=5, decimal_places=0, blank=True, default=0)
-    keywords = ListField()
+    keywords = ListField(verbose_name='Ключові слова')
+    owner = models.ForeignKey(User, verbose_name='власник', on_delete=models.CASCADE,
+                              related_name='thing')
 
     class Meta:
         verbose_name = 'Річ'
         verbose_name_plural = 'Речі'
         ordering = ('name',)
         index_together = (('id', 'name'),)
+
+    # class MPTTMeta:
+    #     order_insertion_by = ['name']
 
     def __str__(self):
         return self.name

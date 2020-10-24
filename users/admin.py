@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserChangeForm, CustomUserCreationForm
-from .models import Profile
+from .models import Profile, TemporaryBanIp
 
 CustomUser = get_user_model()
 
@@ -17,7 +17,7 @@ class CustomUserAdmin(UserAdmin):
     list_display_links = ('email',)
     fieldsets = (
         (None, {'fields': ('first_name', 'last_name', 'email', 'password')}),
-        ('Permissions', {'fields': ('is_staff', 'is_active')}),
+        ('Permissions', {'fields': ('is_staff', 'is_active', 'groups')}),
     )
     add_fieldsets = (
         (None, {
@@ -34,3 +34,8 @@ admin.site.register(CustomUser, CustomUserAdmin)
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('phone', 'street', 'postal_code', 'city')
+
+@admin.register(TemporaryBanIp)
+class TemporaryBanIpAdmin(admin.ModelAdmin):
+    list_display = ('ip_address', 'status', 'attempts', 'time_unblock')
+    search_fields = ('ip_address',)

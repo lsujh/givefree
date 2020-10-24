@@ -54,3 +54,12 @@ class Profile(models.Model):
     # def __str__(self):
     #     return self.user__profile.email
 
+
+class TemporaryBanIp(models.Model):
+    ip_address = models.GenericIPAddressField('IP адреса', unique=True)
+    attempts = models.IntegerField('Невдалих спроб', default=0)
+    time_unblock = models.DateTimeField('Час розблокування', blank=True)
+    status = models.BooleanField('Статус блокування', default=False)
+
+    def __str__(self):
+        return self.ip_address

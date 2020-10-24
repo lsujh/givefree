@@ -1,15 +1,24 @@
+# -*- coding: utf-8 -*-
+from urllib.parse import urlparse
+
 from django.contrib.auth import get_user_model, login as auth_login
 from django.contrib.auth.views import LoginView, PasswordResetView
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.utils.translation import get_language
 from django.contrib import messages
+from django.utils.http import is_safe_url, urlunquote
+from django.template.context_processors import csrf
+from django.contrib import auth
+from django.views import View
+from django.utils import timezone
+from django.contrib.auth.forms import AuthenticationForm
 
 from .tasks import mail_send
 from .user_crypt import decoder
 from .forms import CustomUserCreationForm, CustomAuthenticationForm, ProfileForm, UserForm
-
+from .models import TemporaryBanIp
 
 User = get_user_model()
 
@@ -73,12 +82,62 @@ def profile(request):
                                                      'profile_form': profile_form})
 
 
+class ELoginView(View):
+    def get(self, request):
+        if auth.get_user(request).is_authenticated:
+            return redirect('/')
+        else:
+            form = CustomAuthenticationForm
+            return render(request, 'registration/login.html', {'form': form})
+    def post(self, request):
+        form = CustomAuthenticationForm(request, data=request.POST)
+        ip = get_client_ip(request)
+        obj, created = TemporaryBanIp.objects.get_or_create(ip_address=ip,
+            defaults={'ip_address': ip, 'time_unblock': timezone.now()})
+        if obj.status is True and obj.time_unblock > timezone.now():
+            if obj.attempts == 3 or obj.attempts == 6:
+               return render(request, 'block_15_minutes.html')
+            elif obj.attempts == 9:
+                return render(request, 'block_24_hours.html')
+        elif obj.status is True and obj.time_unblock < timezone.now():
+            obj.status = False
+            obj.save()
 
-class CustomLoginView(LoginView):
-    form_class = CustomAuthenticationForm
+        if form.is_valid():
+            auth.login(request, form.get_user(), backend='users.authenticate.CustomModelBackend')
+            obj.delete()
+            next = urlparse(get_next_url(request)).path
+            if next == '/admin/login/' and request.user.is_staff:
+                return redirect('/admin/')
+            return redirect(next)
+        else:
+            obj.attempts += 1
+            if obj.attempts == 3 or obj.attempts == 6:
+                obj.time_unblock = timezone.now() + timezone.timedelta(minutes=15)
+                obj.status = True
+            elif obj.attempts == 9:
+                obj.time_unblock = timezone.now() + timezone.timedelta(1)
+                obj.status = True
+            elif obj.attempts > 9:
+                obj.attempts = 1
+            obj.save()
 
-    def form_valid(self, form):
-        auth_login(self.request, form.get_user(), backend='users.authenticate.CustomModelBackend')
-        return HttpResponseRedirect(self.get_success_url())
+        return render(request, 'registration/login.html', {'form': form})
+
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[-1].strip()
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
+def get_next_url(request):
+    next = request.META.get('HTTP_REFERER')
+    if next:
+        next = urlunquote(next)
+    if not is_safe_url(url=next, allowed_hosts=request.get_host()):
+        next = '/'
+    return next
 
 

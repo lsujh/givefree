@@ -65,7 +65,6 @@ def things_list(request, category_slug=None, category_pk=None):
 def thing_detail(request, pk, slug):
     context = {}
     context['thing'] = get_object_or_404(Things, pk=pk, slug=slug)
-    # print(context['thing'].keywords)
     context['meta'] = context['thing'].as_meta()
     context['cart_thing_form'] = CartAddThingForm(initial={'price': context['thing'].price})
     context['breadcrumb'] = context['thing'].category.get_ancestors(include_self=True)

@@ -106,7 +106,6 @@ class CustomLoginView(View):
             obj.delete()
             # next = urlparse(get_next_url(request)).path
             next = request.session.get('referer', '/')
-            print(next)
             if next == '/admin/login/' and request.user.is_staff:
                 return redirect('/admin/')
             return redirect(next)

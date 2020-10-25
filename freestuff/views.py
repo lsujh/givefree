@@ -23,6 +23,7 @@ def robots_txt(request):
 
 
 def things_list(request, category_slug=None, category_pk=None):
+    request.session['referer'] = request.build_absolute_uri()
     request.session.pop('form_error', None)
     category = None
     categories = Category.objects.all()
@@ -64,6 +65,7 @@ def things_list(request, category_slug=None, category_pk=None):
 
 def thing_detail(request, pk, slug):
     context = {}
+    request.session['referer'] = request.build_absolute_uri()
     context['thing'] = get_object_or_404(Things, pk=pk, slug=slug)
     context['meta'] = context['thing'].as_meta()
     context['cart_thing_form'] = CartAddThingForm(initial={'price': context['thing'].price})

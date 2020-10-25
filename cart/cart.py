@@ -15,6 +15,7 @@ class Cart(object):
                 del self.session['coupon_id']
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
+
         self.coupon_id = self.session.get('coupon_id')
 
     def __iter__(self):

@@ -12,6 +12,7 @@ def cart_add(request, thing_pk):
     if '_delete' in request.POST:
         return cart_remove(request, thing_pk)
     request.session.pop('form_error', None)
+    request.session['referer'] = request.build_absolute_uri('/cart/')
     cart = Cart(request)
     thing = get_object_or_404(Things, pk=thing_pk)
     form = CartAddThingForm(request.POST)
@@ -34,6 +35,7 @@ def cart_remove(request, thing_pk):
     return redirect('cart:cart_detail')
 
 def cart_detail(request):
+
     cart = Cart(request)
     if not cart:
         if request.session.get('form_error'):

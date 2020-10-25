@@ -1,7 +1,7 @@
 from django.urls import path, re_path, reverse_lazy
 from django.contrib.auth import views as auth_views
 
-from .views import activate_user_account, signup, profile, CustomLoginView, PasswordReset, ELoginView
+from .views import activate_user_account, signup, profile, CustomLoginView, PasswordReset
 
 
 app_name = 'users'
@@ -10,8 +10,7 @@ urlpatterns = [
     re_path(r'activate/(?P<signed_user>[0-9A-Za-z_\-]+/[A-Za-z0-9_=-]+/[A-Za-z0-9_=-]+)/$',
             activate_user_account, name='activate_user_account'),
     path('signup/', signup, name='signup'),
-    path('login/', ELoginView.as_view(), name='login'),
-    # path('login/', CustomLoginView.as_view(), name='login'),
+    path('login/', CustomLoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='registration/logout.html'), name='logout'),
     path('password_change/', auth_views.PasswordChangeView.as_view(template_name='registration/password_change.html',
                                                                    success_url=reverse_lazy('users:password_change_done')),

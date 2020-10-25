@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 from urllib.parse import urlparse
 
-from django.contrib.auth import get_user_model, login as auth_login
-from django.contrib.auth.views import LoginView, PasswordResetView
+from django.contrib.auth import get_user_model
+from django.contrib.auth.views import PasswordResetView
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
 from django.utils.translation import get_language
 from django.contrib import messages
 from django.utils.http import is_safe_url, urlunquote
-from django.template.context_processors import csrf
 from django.contrib import auth
 from django.views import View
 from django.utils import timezone
-from django.contrib.auth.forms import AuthenticationForm
+
 
 from .tasks import mail_send
 from .user_crypt import decoder
@@ -82,7 +80,7 @@ def profile(request):
                                                      'profile_form': profile_form})
 
 
-class ELoginView(View):
+class CustomLoginView(View):
     def get(self, request):
         if auth.get_user(request).is_authenticated:
             return redirect('/')
@@ -106,7 +104,9 @@ class ELoginView(View):
         if form.is_valid():
             auth.login(request, form.get_user(), backend='users.authenticate.CustomModelBackend')
             obj.delete()
-            next = urlparse(get_next_url(request)).path
+            # next = urlparse(get_next_url(request)).path
+            next = request.session.get('referer', '/')
+            print(next)
             if next == '/admin/login/' and request.user.is_staff:
                 return redirect('/admin/')
             return redirect(next)
@@ -132,12 +132,12 @@ def get_client_ip(request):
         ip = request.META.get('REMOTE_ADDR')
     return ip
 
-def get_next_url(request):
-    next = request.META.get('HTTP_REFERER')
-    if next:
-        next = urlunquote(next)
-    if not is_safe_url(url=next, allowed_hosts=request.get_host()):
-        next = '/'
-    return next
+# def get_next_url(request):
+#     next = request.META.get('HTTP_REFERER')
+#     if next:
+#         next = urlunquote(next)
+#     if not is_safe_url(url=next, allowed_hosts=request.get_host()):
+#         next = '/'
+#     return next
 
 

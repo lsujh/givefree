@@ -1,4 +1,5 @@
 import weasyprint
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404
 from django.template.loader import render_to_string
@@ -35,6 +36,7 @@ def order_create(request):
                 'province': data.province,}
         form = OrderCreateForm(data)
     if request.method == 'POST':
+        request.session['referer'] = request.build_absolute_uri()
         form = OrderCreateForm(request.POST)
         if form.is_valid():
             cd = form.cleaned_data

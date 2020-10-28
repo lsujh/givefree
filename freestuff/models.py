@@ -6,6 +6,7 @@ from typing import Iterable
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.utils import timezone
 
 
 User = get_user_model()
@@ -132,3 +133,6 @@ class Images(ModelMeta, models.Model):
     def get_meta_image(self):
         if self.image:
             return self.image.image
+
+
+

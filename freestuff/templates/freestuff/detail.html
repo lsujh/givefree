@@ -4,6 +4,7 @@
 {% load thumbnail %}
 {% load bootstrap4 %}
 
+
 {% block head %}
 <title>{{ thing.name }}</title>
 {% endblock head %}
@@ -34,7 +35,7 @@
                     <div class="row m-1 p-1">
                         <a data-fancybox="gallery" href="{{ image.image|thumbnail_url:'large' }}">
                             <img src="{{ image.image|thumbnail_url:'small' }}" class="rounded img-fluid"
-                            alt="{{ thing.name }}" title="{{ thing.name }}">
+                                 alt="{{ thing.name }}" title="{{ thing.name }}">
                         </a>
                     </div>
                     {% endif %}
@@ -54,28 +55,29 @@
                     <h1>{{ thing.name }}</h1>
                     <div class="mb-2">
                         {% if thing.size %}
-                    Розмір:  {{ thing.size }}
-                    {% endif %}
+                        Розмір:  {{ thing.size }}
+                        {% endif %}
                     </div>
                     <div>
                         <form action="{% url 'cart:cart_add' thing.pk %}" method="post">
                             <div class="form-group">
                                 <div class="w-25">
-                                {% bootstrap_field cart_thing_form.price %}
+                                    {% bootstrap_field cart_thing_form.price %}
                                 </div>
                                 <div class="d-none">{{ cart_thing_form.quantity }}</div>
                                 {% csrf_token %}
                                 {% if thing.pk in cart_pk %}
                                 <p class="mt-3 font-italic text-info">Ця річ вже є в Вашому кошику
-                                <a href="{% url 'cart:cart_detail' %}">перейти в кошик</a>.
+                                    <a href="{% url 'cart:cart_detail' %}">перейти в кошик</a>.
                                 </p>
                                 {% else %}
                                 <input type="submit" class="btn btn-outline-primary" value="Додати в кошик">
                                 {% endif %}
                             </div>
                         </form>
+                        {{ thing.description|linebreaks }}
                     </div>
-                    {{ thing.description|linebreaks }}
+                    <div>{% include 'comments/comments.html' %}</div>
                     {% if recommended_things %}
                     <div class="recommendations">
                         <h3>Люди купують це разом</h3>

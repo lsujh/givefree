@@ -1,0 +1,76 @@
+{% load mptt_tags %}
+{% load bootstrap4 %}
+
+<hr class="hr-horizontal-gradient">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+    Додати новий коментар
+</button>
+{% if not comments %}
+<div class="pt-3 pb-3">
+Коментарів ще немає.
+</div>
+{% else %}
+<div class="p-3">
+Коментарів {{ comments.count }}
+</div>
+{% endif %}
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {%  bootstrap_field form.author show_label=False %}
+                    {%  bootstrap_field form.email show_label=False %}
+                    {%  bootstrap_field form.content show_label=False %}
+                    <button type="submit">Додати</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<ul class="list-group ">
+    {% recursetree comments %}
+    <li class="list-group-item">
+        <div class="text-muted">
+            {{ node.author }} | {{ node.published }}</div>
+        {% if node.deleted %}
+        <div class="text-justify pt-2 mt-2 text-warning">Коментар видалено.</div>
+        {% else %}
+        <div class="text-justify pt-2 mt-2">{{ node.content|linebreaks }}</div>
+        <a href="#edit-modal" data-toggle="modal" id="data-id" data-target="#edit-modal" data-id="{{ node.id }}">Коментувати ({{ node.get_descendant_count }})</a>
+        <div id="edit-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body edit-content">
+                        <form method="post">
+                            {% csrf_token %}
+                            {%  bootstrap_field form.author show_label=False %}
+                    {%  bootstrap_field form.email show_label=False %}
+                    {%  bootstrap_field form.content show_label=False %}
+                            <button class="btn btn-raised btn-primary pull-right" type="submit" name="parent" id="parent_id" value="">Зберегти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if not node.is_leaf_node %}
+        <ul class="list-group">
+            {{ children }}
+        </ul>
+        {% endif %}
+    </li>
+    {% endrecursetree %}
+</ul>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+$(document).ready(function(){
+    $('a').click(function(){
+         var parent =  $(this).attr('data-id');
+         $('#parent_id').val(parent);
+    });
+});
+</script>
+

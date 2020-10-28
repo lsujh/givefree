@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'coupons.apps.CouponsConfig',
     'pages.apps.PagesConfig',
+    'comments.apps.CommentsConfig',
 ]
 
 META_DEFAULT_KEYWORDS = ['віддам безкоштовно', 'поторгуємось', 'гаражна розпродаж',

@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Q
 from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
 from django.http import HttpResponse
@@ -7,6 +7,7 @@ from django.views.decorators.http import require_GET
 from .models import Category, Things
 from cart.forms import CartAddThingForm
 from .recommender import Recommender
+from comments.forms import CommentForm
 
 
 @require_GET
@@ -70,9 +71,28 @@ def thing_detail(request, pk, slug):
     context['meta'] = context['thing'].as_meta()
     context['cart_thing_form'] = CartAddThingForm(initial={'price': context['thing'].price})
     context['breadcrumb'] = context['thing'].category.get_ancestors(include_self=True)
+    context['comments'] = context['thing'].comments.filter(active=True)
     if not context['thing'].price:
         context['cart_thing_form'].fields['price'].widget.attrs['readonly'] = False
         context['cart_thing_form'].fields['price'].__dict__['help_text'] = 'Введіть ціну, яку Ви готові заплатити'
     r = Recommender()
     context['recommended_things'] = r.suggest_things_for([context['thing']], 4)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            new_comment = form.save(commit=False)
+            try:
+                new_comment.parent = context['comments'].get(id=form.cleaned_data['parent'])
+            except:
+                pass
+            new_comment.thing = context['thing']
+            new_comment.save()
+            return redirect(context['thing'].get_absolute_url())
+    data = {}
+    if request.user.is_authenticated:
+        data['email'] = request.user.email
+        data['author'] = request.user.full_name()
+    context['form'] = CommentForm(initial=data)
     return render(request, 'freestuff/detail.html', context)
+
+

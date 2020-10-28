@@ -11,6 +11,7 @@ class CartAddThingForm(forms.ModelForm):
                                widget=forms.NumberInput(attrs={'readonly': True, 'step': 1,
                                                                }))
     update = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput)
+
     class Meta:
         model = Things
         fields = ('quantity', 'price')
@@ -18,5 +19,5 @@ class CartAddThingForm(forms.ModelForm):
     def clean(self):
         quantity = self.cleaned_data['quantity']
         if quantity > self.thing.quantity:
-            CartAddThingForm.add_error(self, 'quantity', error=ValidationError(f'Повинно бути не більше {self.thing.quantity} шт.'))
-
+            CartAddThingForm.add_error(self, 'quantity',
+                                       error=ValidationError(f'Повинно бути не більше {self.thing.quantity} шт.'))

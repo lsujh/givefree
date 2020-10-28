@@ -8,3 +8,40 @@
   bottom: 0;
   width: 100%;
 }
+
+.password {
+	width: 380px;
+	margin: 15px auto;
+	position: relative;
+}
+#password-input {
+	width: 100%;
+	padding: 5px 0;
+	height: 40px;
+	line-height: 40px;
+	text-indent: 10px;
+	margin: 0 0 15px 0;
+	border-radius: 5px;
+	border: 1px solid #999;
+	font-size: 16px;
+}
+.password-control {
+	position: absolute;
+	top: 11px;
+	right: 6px;
+	display: inline-block;
+	width: 20px;
+	height: 20px;
+	background: url(../img/view.svg) 0 0 no-repeat;
+}
+.password-control.view {
+	background: url(../img/no-view.svg) 0 0 no-repeat;
+}
+
+.hr-horizontal-gradient {
+	margin: 20px 0;
+	padding: 0;
+	height: 6px;
+	border: none;
+	background: linear-gradient(45deg, #333, #ddd);
+}

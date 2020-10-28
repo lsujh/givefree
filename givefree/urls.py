@@ -6,10 +6,12 @@ from django.contrib.sitemaps.views import sitemap
 
 from freestuff.sitemaps import ThingsSitemap
 from freestuff.views import robots_txt
+from users.views import CustomLoginView
 
 sitemaps = {'things': ThingsSitemap,}
 
 urlpatterns = [
+    path('admin/login/', CustomLoginView.as_view()),
     path('admin/', admin.site.urls),
     path('account/', include('users.urls', namespace='users')),
     path('orders/', include('orders.urls', namespace='orders')),

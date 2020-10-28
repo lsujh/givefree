@@ -6,3 +6,24 @@
 .migrations/
 db.sqlite3
 
+/comments/migrations/
+Будет удалено .txt
+Будет удалено cart/__pycache__/
+Будет удалено comments/__pycache__/
+Будет удалено coupons/__pycache__/
+Будет удалено freestuff/__pycache__/
+Будет удалено freestuff/migrations/
+Будет удалено givefree/__pycache__/
+Будет удалено givefree/static/img/no-view.svg
+Будет удалено givefree/static/img/view.svg
+Будет удалено logs/
+Будет удалено media/
+Будет удалено orders/__pycache__/
+Будет удалено orders/migrations/
+Будет удалено pages/__pycache__/tests.cpython-38.pyc
+Будет удалено pages/migrations/__init__.py
+Будет удалено task/
+Будет удалено users/__pycache__/
+Будет удалено users/migrations/
+Будет удалено users/templatetags/__pycache__/
+Будет удалено venv/

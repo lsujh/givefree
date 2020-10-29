@@ -1,7 +1,11 @@
 from mptt.models import MPTTModel, TreeForeignKey
+
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
+
 
 from freestuff.models import Things
+from likes.models import LikeDislike
 
 
 class Comment(MPTTModel):
@@ -14,6 +18,7 @@ class Comment(MPTTModel):
     thing = models.ForeignKey(Things, on_delete=models.CASCADE, related_name='comments')
     active = models.BooleanField(default=True)
     deleted = models.BooleanField(default=False)
+    likes = GenericRelation(LikeDislike, related_query_name='comments')
 
     class Meta:
         verbose_name = 'Коментар'
@@ -24,4 +29,3 @@ class Comment(MPTTModel):
 
     def __str__(self):
         return f'{self.author} {self.thing}'
-

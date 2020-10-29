@@ -27,3 +27,5 @@ db.sqlite3
 Будет удалено users/migrations/
 Будет удалено users/templatetags/__pycache__/
 Будет удалено venv/
+/badwordfilter/migrations/
+/likes/migrations/

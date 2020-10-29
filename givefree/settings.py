@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'meta',
 
+
     'users.apps.UsersConfig',
     'freestuff.apps.FreestuffConfig',
     'cart.apps.CartConfig',
@@ -29,6 +30,8 @@ INSTALLED_APPS = [
     'coupons.apps.CouponsConfig',
     'pages.apps.PagesConfig',
     'comments.apps.CommentsConfig',
+    'badwordfilter.apps.BadwordfilterConfig',
+    'likes.apps.LikesConfig',
 ]
 
 META_DEFAULT_KEYWORDS = ['віддам безкоштовно', 'поторгуємось', 'гаражна розпродаж',

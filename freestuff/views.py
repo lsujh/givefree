@@ -8,6 +8,8 @@ from .models import Category, Things
 from cart.forms import CartAddThingForm
 from .recommender import Recommender
 from comments.forms import CommentForm
+from badwordfilter.views import PymorphyProc, RegexpProc
+from likes import views
 
 
 @require_GET
@@ -19,6 +21,8 @@ def robots_txt(request):
         'Disallow: /orders/',
         'Disallow: /coupons/',
         'Disallow: /cart/',
+        'Disallow: /badwordfilter/',
+        'Disallow: /likes/',
     ]
     return HttpResponse("\n".join(lines), content_type='text/plain')
 
@@ -66,6 +70,7 @@ def things_list(request, category_slug=None, category_pk=None):
 
 def thing_detail(request, pk, slug):
     context = {}
+    views.like_dislike(request)
     request.session['referer'] = request.build_absolute_uri()
     context['thing'] = get_object_or_404(Things, pk=pk, slug=slug)
     context['meta'] = context['thing'].as_meta()
@@ -80,11 +85,14 @@ def thing_detail(request, pk, slug):
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
+            cd = form.cleaned_data
             new_comment = form.save(commit=False)
             try:
-                new_comment.parent = context['comments'].get(id=form.cleaned_data['parent'])
+                new_comment.parent = context['comments'].get(id=cd['parent'])
             except:
                 pass
+            content = PymorphyProc.replace(cd['content'], repl='***')
+            new_comment.content = RegexpProc.replace(content, repl='***')
             new_comment.thing = context['thing']
             new_comment.save()
             return redirect(context['thing'].get_absolute_url())
@@ -94,5 +102,13 @@ def thing_detail(request, pk, slug):
         data['author'] = request.user.full_name()
     context['form'] = CommentForm(initial=data)
     return render(request, 'freestuff/detail.html', context)
+
+# def replaceAll(content):
+#     content = content.split()
+#     forbidden = ['мат', 'погане']
+#     content = list(map(lambda x: x if x not in forbidden else '***', content))
+#     return ' '.join(content)
+
+
 
 

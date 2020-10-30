@@ -41,7 +41,7 @@
         {% else %}
         <div class="text-justify pt-2 mt-2">{{ node.content|linebreaks }}</div>
         <div>
-            {% if request.user.is_authenticated %}
+            {% if user.is_authenticated %}
        <a href="{% url 'freestuff:thing_detail' thing.pk thing.slug %}?like={{node.id}}">
            <img src="{% static 'img/hand-thumbs-up.svg' %}"  alt="" width="16" height="16" title="hand-thumbs-up"></a>
             <span id="ajax_{{node.id}}"> {{ node.likes.likes }}</span>

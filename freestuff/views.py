@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.core.paginator import EmptyPage, Paginator, PageNotAnInteger
 from django.http import HttpResponse
@@ -8,8 +8,9 @@ from .models import Category, Things
 from cart.forms import CartAddThingForm
 from .recommender import Recommender
 from comments.forms import CommentForm
-from badwordfilter.views import PymorphyProc, RegexpProc
+
 from likes import views
+from comments.views import add_comment
 
 
 @require_GET
@@ -83,19 +84,8 @@ def thing_detail(request, pk, slug):
     r = Recommender()
     context['recommended_things'] = r.suggest_things_for([context['thing']], 4)
     if request.method == 'POST':
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            new_comment = form.save(commit=False)
-            try:
-                new_comment.parent = context['comments'].get(id=cd['parent'])
-            except:
-                pass
-            content = PymorphyProc.replace(cd['content'], repl='***')
-            new_comment.content = RegexpProc.replace(content, repl='***')
-            new_comment.thing = context['thing']
-            new_comment.save()
-            return redirect(context['thing'].get_absolute_url())
+        add_comment(request, context['thing'], context['comments'])
+
     data = {}
     if request.user.is_authenticated:
         data['email'] = request.user.email
@@ -103,11 +93,7 @@ def thing_detail(request, pk, slug):
     context['form'] = CommentForm(initial=data)
     return render(request, 'freestuff/detail.html', context)
 
-# def replaceAll(content):
-#     content = content.split()
-#     forbidden = ['мат', 'погане']
-#     content = list(map(lambda x: x if x not in forbidden else '***', content))
-#     return ' '.join(content)
+
 
 
 

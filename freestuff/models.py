@@ -7,6 +7,9 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.utils import timezone
+from django.contrib.contenttypes.fields import GenericRelation
+
+from comments.models import Comment
 
 
 User = get_user_model()
@@ -89,6 +92,7 @@ class Things(ModelMeta, models.Model):
     keywords = ListField(verbose_name='Ключові слова')
     owner = models.ForeignKey(User, verbose_name='власник', on_delete=models.CASCADE,
                               related_name='thing')
+    comments = GenericRelation(Comment, related_query_name='thing')
 
     class Meta:
         verbose_name = 'Річ'

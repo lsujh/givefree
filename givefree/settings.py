@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     'mptt',
     'easy_thumbnails',
     'meta',
-
+    'taggit',
 
     'users.apps.UsersConfig',
     'freestuff.apps.FreestuffConfig',
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'comments.apps.CommentsConfig',
     'badwordfilter.apps.BadwordfilterConfig',
     'likes.apps.LikesConfig',
+    'blog.apps.BlogConfig',
 ]
 
 META_DEFAULT_KEYWORDS = ['віддам безкоштовно', 'поторгуємось', 'гаражна розпродаж',

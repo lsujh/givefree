@@ -6,11 +6,10 @@ from .forms import CommentForm
 from .models import Comment
 
 
-def add_comment(request, thing, comments):
+def add_comment(request, obj, comments):
     form = CommentForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
-        obj = thing
         obj_type = ContentType.objects.get_for_model(obj)
         try:
             parent = comments.get(id=cd['parent'])
@@ -21,6 +20,6 @@ def add_comment(request, thing, comments):
         Comment.objects.create(
             content_type=obj_type, object_id=obj.id, author=cd['author'], parent=parent,
             email=cd['email'], content=content)
-        return redirect(thing.get_absolute_url())
+        return redirect(obj.get_absolute_url())
 
 

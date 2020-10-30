@@ -1,6 +1,7 @@
 from mptt.models import MPTTModel, TreeForeignKey
 
 from django.db import models
+from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericRelation, GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
@@ -30,3 +31,4 @@ class Comment(MPTTModel):
 
     def __str__(self):
         return f'{self.author} {self.thing}'
+

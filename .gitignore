@@ -29,3 +29,4 @@ db.sqlite3
 Будет удалено venv/
 /badwordfilter/migrations/
 /likes/migrations/
+/blog/migrations/

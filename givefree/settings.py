@@ -17,11 +17,15 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'django.contrib.sitemaps',
+    'django.contrib.postgres',
     'bootstrap4',
     'mptt',
     'easy_thumbnails',
     'meta',
     'taggit',
+    'ckeditor',
+    'ckeditor_uploader',
+
 
     'users.apps.UsersConfig',
     'freestuff.apps.FreestuffConfig',
@@ -33,6 +37,8 @@ INSTALLED_APPS = [
     'badwordfilter.apps.BadwordfilterConfig',
     'likes.apps.LikesConfig',
     'blog.apps.BlogConfig',
+    'search.apps.SearchConfig',
+    'bookmark.apps.BookmarkConfig',
 ]
 
 META_DEFAULT_KEYWORDS = ['віддам безкоштовно', 'поторгуємось', 'гаражна розпродаж',
@@ -137,6 +143,81 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+from ckeditor.configs import DEFAULT_CONFIG
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_RESTRICT_BY_DATE = True
+CKEDITOR_ALLOW_NONIMAGE_FILES = False
+
+# CKEDITOR_CONFIGS = {
+#     'default': {
+#      'toolbar': 'None'
+#     },
+# }
+CUSTOM_TOOLBAR = [
+    {
+        "name": "document",
+        "items": [
+            "Styles",
+            "Format",
+            "Bold",
+            "Italic",
+            "Underline",
+            "Strike",
+            "-",
+            "TextColor",
+            "BGColor",
+            "-",
+            "JustifyLeft",
+            "JustifyCenter",
+            "JustifyRight",
+            "JustifyBlock",
+        ],
+    },
+    {
+        "name": "widgets",
+        "items": [
+            "Undo",
+            "Redo",
+            "-",
+            "NumberedList",
+            "BulletedList",
+            "-",
+            "Outdent",
+            "Indent",
+            "-",
+            "Link",
+            "Unlink",
+            "-",
+            "Image",
+            "CodeSnippet",
+            "Table",
+            "HorizontalRule",
+            "Smiley",
+            "SpecialChar",
+            "-",
+            "Blockquote",
+            "-",
+            "ShowBlocks",
+            "Maximize",
+        ],
+    },
+]
+
+CKEDITOR_CONFIGS = {
+    "default": DEFAULT_CONFIG,
+    "my-custom-toolbar": {
+        "skin": "moono-lisa",
+        "toolbar": CUSTOM_TOOLBAR,
+        "toolbarGroups": None,
+        "extraPlugins": ",".join(["image2", "codesnippet"]),
+        "removePlugins": ",".join(["image"]),
+        "codeSnippet_theme": "xcode",
+    },
+}
+
 
 STATIC_URL = '/static/'
 

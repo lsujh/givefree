@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-5 offset-2 mt-5 pt-5">
+            <h1>Результат пошуку</h1>
+            {% if results %}
+            {% for result in results %}
+            <a href="{{ result.get_absolute_url }}">
+                <h2>{{ result.title }}</h2></a>
+            {{ result.desctription|safe }}
+            <p><a class="btn btn-default btn-sm" href="{{ result.get_absolute_url }}">Читати далі</a></p>
+            {% endfor %}
+            {% bootstrap_pagination results url=last_question %}
+            {% else %}
+            <p>Не знайдено публікацій по вашему запросу<br>Попробуйте повторити змінити запрос</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

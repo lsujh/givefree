@@ -29,8 +29,9 @@ urlpatterns = [
     path('', include('freestuff.urls', namespace='freestuff')),
     path('robots.txt', robots_txt),
     path('blog/', include('blog.urls', namespace='blog')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('search/', include('search.urls', namespace='search')),
 ]
-
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

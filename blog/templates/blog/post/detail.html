@@ -7,27 +7,112 @@
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-  <h1>{{ post.title }}</h1>
-
-  <p class="date">
-    Published {{ post.publish }} by {{ post.author }}
-  </p>
-  {{ post.body|markdown }}
-  <p>
-    <a href="{% url 'blog:post_share' post.id %}">
-      Share this post
-    </a>
-  </p>
-
-  <h2>Similar posts</h2>
-  {% for post in similar_posts %}
-    <p>
-      <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-    </p>
-  {% empty %}
-    There are no similar posts yet.
-  {% endfor %}
-
-<div>{% include 'comments/comments.html' %}</div>
-
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-10 offset-2 pt-5 mt-5">
+            <h1>{{ post.title }}</h1>
+        </div></div>
+    <div class="row">
+        <div class="col-sm-2">
+            {% show_category_posts %}
+        </div>
+        <div class="col-sm-7">
+            <p class="date text-muted">
+                Опубліковано <span class="font-italic">{{ post.publish }}</span>, автор <span class="font-italic">{{ post.author }}</span>
+            </p>
+            {% autoescape off %}
+            {{ post.body|markdown }}
+            {% endautoescape %}
+            <hr>
+            <h5>Подібні статті</h5>
+            {% for post in similar_posts %}
+            <p>
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+            </p>
+            {% empty %}
+            Подібних публікацій ще немає.
+            {% endfor %}
+            <div class="row">
+                <div class="col-sm-11 pb-3 mb-3">
+                <a href="{{ obj.get_absolute_url }}?bookmark={{post.id}}"  title="Закладки">
+                    <span class="{% if post.bookmarkpost_set.all|user_in:user %}active{% endif %}">
+                        <img src="{% static 'img/favourites.png' %}"></span>
+                </a>
+                {{ post.get_bookmark_count }}
+                    </div>
+                <div class="col-sm-1 pb-3 mb-3">
+                    <a href="#myModal" data-toggle="modal" data-target="#myModal" title="Поділитися посиланням">
+                        <img src="{% static 'img/share.png' %}">
+                    </a>
+                    <div class="modal fade" id="myModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">×</button>
+                                </div>
+                                <div class="modal-body btn">
+                                    <a class="btn btn-default btn-sm" href="http://vk.com/share.php?url=http://things-for-your-price.pp.ua/{{ post.get_absolute_url }}"
+                                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+                                       target="_blank" rel="nofollow">
+                                        <img src="{% static 'img/vk.png' %}">
+                                    </a>
+                                    <a class="btn btn-default btn-sm" href="https://twitter.com/share?url={{request.build_absolute_uri}}"
+                                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+                                       target="_blank" rel="nofollow">
+                                        <img src="{% static 'img/twitter.png' %}">
+                                    </a>
+                                    <a class="btn btn-default btn-sm" href="https://www.facebook.com/sharer/sharer.php?u={{request.build_absolute_uri}}"
+                                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+                                       target="_blank" rel="nofollow">
+                                        <img src="{% static 'img/facebook.png' %}">
+                                    </a>
+                                    <a class="btn btn-default btn-sm" href="https://www.linkedin.com/shareArticle?mini=true&url={{request.build_absolute_uri}}"
+                                       onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600');return false;"
+                                       target="_blank" rel="nofollow">
+                                        <img src="{% static 'img/linkedin.png' %}">
+                                    </a>
+                                    <a href="#myModal1" data-toggle="modal" data-target="#myModal1" class="btn btn-default btn-sm">
+                                        <img src="{% static 'img/email.png' %}">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>{% include 'comments/comments.html' %}</div>
+        </div>
+        <div class="col-sm-3">
+            {% show_latest_posts 3 %}
+            {% show_popular_posts 5 %}
+            <p class="list-group-item active">Найбільше коментують</p>
+            {% get_most_commented_posts as most_commented_posts %}
+            {% for post in most_commented_posts %}
+            <p>
+                <a href="{{ post.get_absolute_url }}">{{ post.title }} </a>
+                ({{ post.total_comments }})
+            </p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="modal" id="myModal1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>Поділитись "{{ post.title }}" через e-mail</h4>
+                <form action="." method="post">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                    <input type="submit" value="Послати e-mail">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+

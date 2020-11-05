@@ -2,7 +2,7 @@ from mptt.admin import TreeRelatedFieldListFilter, MPTTModelAdmin
 
 from django.contrib import admin
 
-from .models import Post, Category
+from .models import Post, Category, PostStatistic
 
 
 @admin.register(Category)
@@ -24,4 +24,7 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ('status', 'publish')
 
 
-
+@admin.register(PostStatistic)
+class PostStatisticAdmin(admin.ModelAdmin):
+    list_display = ('post', 'date', 'views',)
+    search_fields = ('post',)

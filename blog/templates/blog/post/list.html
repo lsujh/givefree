@@ -1,69 +1,65 @@
 {% extends "base.html" %}
 {% load blog_tags %}
 {% load mptt_tags %}
- 
-{% block title %}My Blog{% endblock %}
- 
-{% block content %}
-<div class="container-fluid mt-5 pt-5">
+{% load bootstrap4 %}
 
-  <h1>My Blog</h1>
-  <div class="row">
+{% block title %}My Blog{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-5 pt-5 mb-3 pb-3">
+    <h1>My Blog</h1>
+    <div class="row">
         <div class="col-sm-2">
-            <h3>Категорії</h3>
-            <ul>
-                <li>
-                    <a href="{% url 'blog:post_list' %}">Всі категорії ({{ count }})</a>
-                </li>
-            </ul>
-            <ul>
-                {% recursetree categories %}
-                {% if node.items_count %}
-                <li> <a href="{{ node.get_absolute_url }} ">{{ node.name }}
-                    <span>({{ node.items_count }})</span></a>
-                    {% if not node.is_leaf_node %}
-                    <ul>
-                        <a href="{{ children.det_absolute_url }}"> {{ children }}</a>
-                    </ul>
-                    {% endif %}
-                </li>
-                {% endif %}
-                {% endrecursetree %}
-            </ul>
+            {% show_category_posts %}
         </div>
-        <div class="col-sm-8">
-          <nav aria-label="breadcrumb">
+        <div class="col-sm-7">
+            <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     {% for crumb in breadcrumb %}
                     <li class="breadcrumb-item"> <a href="{{ crumb.get_absolute_url }}"> {{ crumb }} </a> </li>
                     {% endfor %}
                 </ol>
             </nav>
-  {% if tag %}
-    <h4>Posts tagged with "{{ tag.name }}"</h4>
-  {% endif %}
-  {% for post in posts %}
-    <h2>
-      <a href="{{ post.get_absolute_url }}">
-        {{ post.title }}
-      </a>
-    </h2>
-    <p class="tags">
-      Tags:
-      {% for tag in post.tags.all %}
-        <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
-          {{ tag.name }}
-        </a>
-        {% if not forloop.last %}, {% endif %}
-      {% endfor %}
-    </p>
-    <p class="date">
-      Published {{ post.publish }} by {{ post.author }}
-    </p>
-    {{ post.body|markdown|truncatewords_html:30 }}
-  {% endfor %}
-  {% include "pagination.html" with page=posts %}
-</div>
-  </div>
+            {% if tag %}
+            <h4>Статті з тегом "{{ tag.name }}"</h4>
+            {% endif %}
+            <div id="post-list">
+            {% for post in posts %}
+            <h2>
+                <a href="{{ post.get_absolute_url }}">
+                    {{ post.title }}
+                </a>
+            </h2>
+            <p class="tags">
+                Теги:
+                {% for tag in post.tags.all %}
+                <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
+                    {{ tag.name }}
+                </a>
+                {% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            <p class="date text-muted">
+                Опубліковано <span class="font-italic">{{ post.publish }}</span>, автор <span class="font-italic">{{ post.author }}</span>
+            </p>
+            {% autoescape off %}
+            {{ post.body|markdown|truncatewords_html:30 }}
+            {% endautoescape %}
+            {% endfor %}
+            </div>
+            {% bootstrap_pagination posts %}
+        </div>
+        <div class="col-sm-3">
+            {% show_latest_posts 3 %}
+            {% show_popular_posts 5 %}
+            <p class="list-group-item active">Найбільше коментують</p>
+    {% get_most_commented_posts as most_commented_posts %}
+    {% for post in most_commented_posts %}
+      <p>
+        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+      </p>
+    {% endfor %}
+        </div>
+    </div>
 </div>
 {% endblock %}

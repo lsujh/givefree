@@ -1,6 +1,7 @@
 from mptt.models import TreeForeignKey, MPTTModel
 from meta.models import ModelMeta
 from taggit.managers import TaggableManager
+from ckeditor_uploader.fields import RichTextUploadingField
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.auth import get_user_model
@@ -46,9 +47,9 @@ class Post(ModelMeta, models.Model):
     category = TreeForeignKey(
         'Category', related_name='posts', on_delete=models.CASCADE, verbose_name='Категорія')
     title = models.CharField(verbose_name='Назва', max_length=250, db_index=True)
-    slug = models.SlugField(max_length=250, db_index=True)
+    slug = models.SlugField(max_length=250, db_index=True, unique=True)
     description = models.TextField(verbose_name='Опис', blank=True)
-    body = models.TextField(verbose_name='Стаття')
+    body = RichTextUploadingField(verbose_name='Стаття')
     status = models.CharField(max_length=10, verbose_name='Статус', choices=STATUS_CHOICES,
                               default='draft')
     publish = models.DateTimeField(verbose_name='Дата публікації', default=timezone.now)
@@ -93,3 +94,14 @@ class Post(ModelMeta, models.Model):
         'description': 'description',
         'keywords': 'keywords',
     }
+
+    def get_bookmark_count(self):
+        return self.bookmarkpost_set.all().count()
+
+class PostStatistic(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    date = models.DateField('Дата', default=timezone.now)
+    views = models.IntegerField('Перегляди', default=0)
+
+    def __str__(self):
+        return self.post.title

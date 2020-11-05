@@ -1,0 +1,13 @@
+{% load bootstrap4 %}
+{% load static %}
+
+{% if popular_posts %}
+
+<p class="list-group-item active">Найбільше переглядів за тиждень</p>
+{% for pop in popular_posts %}
+    <p >
+   <a href="{% url 'blog:post_detail' pop.date.0 pop.date.1 pop.date.2 pop.post__slug %}">{{ pop.post__title }}</a>
+    ({{ pop.views }})</p>
+{% endfor %}
+
+{% endif %}

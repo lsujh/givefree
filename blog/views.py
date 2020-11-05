@@ -3,15 +3,15 @@ from taggit.models import Tag
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
-from django.db.models import Count
-from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank, TrigramSimilarity
+from django.db.models import Count, Sum
+from django.utils import timezone
 
-
-from .models import Post, Category
+from .models import Post, Category, PostStatistic
 from comments.forms import CommentForm
 from comments.views import add_comment
-from .forms import EmailPostForm, SearchForm
-from likes import views
+from .forms import EmailPostForm
+from likes.views import like_dislike
+from bookmark.views import bookmark
 
 
 def post_list(request, category_slug=None, tag_slug=None):
@@ -22,8 +22,6 @@ def post_list(request, category_slug=None, tag_slug=None):
     if tag_slug:
         tag = get_object_or_404(Tag, slug=tag_slug)
         object_list = object_list.filter(tags__in=[tag])
-
-    categories = Category.objects.all()
     breadcrumb = category
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug).get_descendants(include_self=True)
@@ -44,19 +42,23 @@ def post_list(request, category_slug=None, tag_slug=None):
                   {'page': page,
                    'posts': posts,
                    'category': category,
-                   'categories': categories,
                    'breadcrumb': breadcrumb,
                    'count': count,
                    'tag': tag})
 
 
 def post_detail(request, year, month, day, post):
-    views.like_dislike(request)
+    like_dislike(request)
+    bookmark(request)
     post = get_object_or_404(Post, slug=post,
                              status='published',
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
+    obj, created = PostStatistic.objects.get_or_create(date=timezone.now(), post=post,
+                                                       defaults={'post': post, 'date': timezone.now()})
+    obj.views += 1
+    obj.save(update_fields=['views'])
     comments = post.comments.filter(active=True)
     new_comment = None
     if request.method == 'POST':
@@ -102,21 +104,3 @@ def post_share(request, post_id):
     return render(request, 'blog/post/share.html', {'post': post,
                                                     'form': form,
                                                     'sent': sent})
-
-
-def post_search(request):
-    form = SearchForm()
-    query = None
-    results = []
-    if 'query' in request.GET:
-        form = SearchForm(request.GET)
-        if form.is_valid():
-            query = form.cleaned_data['query']
-            results = Post.objects.annotate(
-                similarity=TrigramSimilarity('title', query),
-            ).filter(similarity__gt=0.3).order_by('-similarity')
-    return render(request,
-                  'blog/post/search.html',
-                  {'form': form,
-                   'query': query,
-                   'results': results})

@@ -7,7 +7,18 @@
 
 {% block content %}
 <div class="container-fluid mt-5 pt-5 mb-3 pb-3">
-    <h1>My Blog</h1>
+    <div class="row">
+        <div class="col-sm-3">
+        <h1>My Blog</h1>
+        </div>
+        <div class="col-cm-7">
+        <form method="get">
+            <button type="submit" class="btn btn-sm btn-primary btn-raised mr-3">Сортуввати</button>
+            <input name="sort" type="checkbox" value="title"> по заголовку
+            <input name="sort" type="checkbox" value="publish"> по даті
+        </form>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-2">
             {% show_category_posts %}
@@ -24,28 +35,28 @@
             <h4>Статті з тегом "{{ tag.name }}"</h4>
             {% endif %}
             <div id="post-list">
-            {% for post in posts %}
-            <h2>
-                <a href="{{ post.get_absolute_url }}">
-                    {{ post.title }}
-                </a>
-            </h2>
-            <p class="tags">
-                Теги:
-                {% for tag in post.tags.all %}
-                <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
-                    {{ tag.name }}
-                </a>
-                {% if not forloop.last %}, {% endif %}
+                {% for post in posts %}
+                <h2>
+                    <a href="{{ post.get_absolute_url }}">
+                        {{ post.title }}
+                    </a>
+                </h2>
+                <p class="tags">
+                    Теги:
+                    {% for tag in post.tags.all %}
+                    <a href="{% url 'blog:post_list_by_tag' tag.slug %}">
+                        {{ tag.name }}
+                    </a>
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </p>
+                <p class="date text-muted">
+                    Опубліковано <span class="font-italic">{{ post.publish }}</span>, автор <span class="font-italic">{{ post.author }}</span>
+                </p>
+                {% autoescape off %}
+                {{ post.body|markdown|truncatewords_html:30 }}
+                {% endautoescape %}
                 {% endfor %}
-            </p>
-            <p class="date text-muted">
-                Опубліковано <span class="font-italic">{{ post.publish }}</span>, автор <span class="font-italic">{{ post.author }}</span>
-            </p>
-            {% autoescape off %}
-            {{ post.body|markdown|truncatewords_html:30 }}
-            {% endautoescape %}
-            {% endfor %}
             </div>
             {% bootstrap_pagination posts %}
         </div>
@@ -53,12 +64,12 @@
             {% show_latest_posts 3 %}
             {% show_popular_posts 5 %}
             <p class="list-group-item active">Найбільше коментують</p>
-    {% get_most_commented_posts as most_commented_posts %}
-    {% for post in most_commented_posts %}
-      <p>
-        <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
-      </p>
-    {% endfor %}
+            {% get_most_commented_posts as most_commented_posts %}
+            {% for post in most_commented_posts %}
+            <p>
+                <a href="{{ post.get_absolute_url }}">{{ post.title }}</a>
+            </p>
+            {% endfor %}
         </div>
     </div>
 </div>

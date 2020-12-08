@@ -1,0 +1,15 @@
+[run]
+omit =
+  *apps.py,
+  *migrations/*,
+  *settings*,
+  *tests/*,
+  *urls.py,
+  *wsgi/*,
+  *.pytest_cache/*,
+  *logs/*,
+  *media/*,
+  *node_modules/*,
+  *task/*,
+  *venv/*,
+  manage.py

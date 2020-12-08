@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'taggit',
     'ckeditor',
     'ckeditor_uploader',
-
+    'silk',
 
     'users.apps.UsersConfig',
     'freestuff.apps.FreestuffConfig',
@@ -68,6 +68,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'silk.middleware.SilkyMiddleware',
 ]
 
 ROOT_URLCONF = 'givefree.urls'
@@ -290,3 +291,4 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 1
+

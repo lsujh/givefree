@@ -1,11 +1,12 @@
 {% load bootstrap4 %}
 {% load static %}
 {% load mptt_tags %}
+{% load blog_tags %}
 
 <h3>Категорії</h3>
 <ul>
     <li>
-        <a href="{% url 'blog:post_list' %}">Всі категорії ({{ count }})</a>
+        <a href="{% url 'blog:post_list' %}">Всі категорії ({% total_posts %})</a>
     </li>
 </ul>
 <ul>

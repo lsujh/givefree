@@ -60,6 +60,7 @@ class Post(ModelMeta, models.Model):
                               related_name='post_author')
     comments = GenericRelation(Comment, related_query_name='post_comment')
 
+
     objects = models.Manager()
     published = PublishedManager()
     tags = TaggableManager()

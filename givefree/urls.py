@@ -31,6 +31,7 @@ urlpatterns = [
     path('blog/', include('blog.urls', namespace='blog')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('search/', include('search.urls', namespace='search')),
+    path('silk/', include('silk.urls', namespace='silk')),
 ]
 
 if settings.DEBUG:

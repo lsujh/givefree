@@ -29,7 +29,7 @@ def show_latest_posts(count=5):
 def show_popular_posts(count=5):
     popular_posts = PostStatistic.objects.filter(date__range=
                                            [timezone.now() - timezone.timedelta(7), timezone.now()]).values(
-        'post__slug', 'post__title', 'post__publish').annotate(views=Sum('views')).order_by('-views')[:5]
+        'post__slug', 'post__title', 'post__publish').annotate(views=Sum('views')).order_by('-views')[:count]
     for pop in popular_posts:
         pop['date'] = [int(i) for i in pop['post__publish'].strftime("%Y.%m.%d").split('.')]
     return {'popular_posts': popular_posts}

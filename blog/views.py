@@ -3,12 +3,13 @@ from taggit.models import Tag
 from django.shortcuts import render, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.core.mail import send_mail
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Prefetch
 from django.utils import timezone
 
 from .models import Post, Category, PostStatistic
 from comments.forms import CommentForm
 from comments.views import add_comment
+from comments.models import Comment
 from .forms import EmailPostForm
 from likes.views import like_dislike
 from bookmark.views import bookmark
@@ -16,7 +17,6 @@ from bookmark.views import bookmark
 
 def post_list(request, category_slug=None, tag_slug=None):
     object_list = Post.published.all()
-    count = object_list.count()
     category = None
     tag = None
     if tag_slug:
@@ -27,7 +27,8 @@ def post_list(request, category_slug=None, tag_slug=None):
         category = get_object_or_404(Category, slug=category_slug).get_descendants(include_self=True)
         object_list = object_list.filter(category__in=category)
         breadcrumb = category[0].get_ancestors(include_self=True)
-
+    sort = request.GET.getlist('sort')
+    object_list = object_list.order_by(*sort)
     paginator = Paginator(object_list, 3)
     page = request.GET.get('page')
     try:
@@ -36,14 +37,12 @@ def post_list(request, category_slug=None, tag_slug=None):
         posts = paginator.page(1)
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
-
     return render(request,
                   'blog/post/list.html',
                   {'page': page,
                    'posts': posts,
                    'category': category,
                    'breadcrumb': breadcrumb,
-                   'count': count,
                    'tag': tag})
 
 

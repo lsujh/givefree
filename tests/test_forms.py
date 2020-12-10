@@ -21,7 +21,12 @@ class TestPostForm:
         user_form = forms.UserForm(data={'user': user})
         profile_form = forms.ProfileForm(data={'user': user, 'phone': '9999999999'})
         assert (user_form.is_valid() and profile_form.is_valid()) is True
-        # assert me== 'Ваш профіль був успішно оновлений!'
+
+
+    def test_form_signup(self):
+        user_form = forms.CustomUserCreationForm(data={'email': 'user@email.com', 'password1': '12pass34',
+                                                       'password2': '12pass34'})
+        assert user_form.is_valid() is True
 
     # def test_correct_form(self):
     #     person = mixer.blend('intro.Person')

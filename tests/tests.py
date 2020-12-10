@@ -1,5 +1,4 @@
 import pytest
-import uuid
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
@@ -7,39 +6,20 @@ from django import urls
 from django.utils import timezone
 
 from users.models import TemporaryBanIp
-from users.views import PasswordReset
+
 
 User = get_user_model()
 
+@pytest.mark.asyncio
+async def test_user_create(create_user):
+    user = await create_user(email='super@test.com')
+    assert user.objects.count() == 1
 
-@pytest.fixture
-def test_password():
-    return 'password'
 
-@pytest.fixture
-def create_user(db, django_user_model, test_password):
-    def make_user(**kwargs):
-        kwargs['password'] = test_password
-        kwargs['id'] = str(uuid.uuid4())
-        kwargs['email_confirm'] = True
-        kwargs['first_name'] = 'first_name'
-        kwargs['last_name'] = 'last_name'
-        return django_user_model.objects.create_user(**kwargs)
-    return make_user
-
-@pytest.fixture
-def auto_login_user(db, client, create_user, test_password):
-    def make_auto_login(user=None):
-        if user is None:
-            user = create_user(email='super@test.com')
-        client.login(email=user.email, password=test_password)
-        return client, user
-    return make_auto_login
-
-@pytest.mark.django_db
-def test_user_create():
-    User.objects.create_user('user@test.com', 'password')
-    assert User.objects.count() == 1
+# @pytest.mark.django_db
+# def test_user_create():
+#     User.objects.create_user('user@test.com', 'password')
+#     assert User.objects.count() == 1
 
 @pytest.mark.django_db
 def test_auth_view(create_user, auto_login_user):

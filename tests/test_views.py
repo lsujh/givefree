@@ -3,10 +3,11 @@ from mixer.backend.django import mixer
 
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth import get_user_model
-from django.contrib.messages import get_messages
 from django.contrib.messages.storage import default_storage
+from django.urls import reverse
 
 from users import views
+
 
 User = get_user_model()
 pytestmark = pytest.mark.django_db
@@ -54,13 +55,12 @@ class TestSignupView:
         assert resp.status_code == 200
         assert 'Реєстрація'.encode() in resp.content
 
-    def test_signup_post(self, rf):
-        user = User.objects.create_user('user@test.com', 'password')
-        req = rf.post('signup/', {})
-        req.session = {}
-        req.user = mixer.blend(User)
-        resp = views.signup(req)
+    def test_singup(self, client):
+        url = reverse('users:signup')
+        resp = client.post(url, data={'email': 'email@email.com', 'password1': '12password34',
+                                                     'password2': '12password34'})
         assert resp.status_code == 200
         assert 'Ласкаво просимо!'.encode() in resp.content
+
 
 

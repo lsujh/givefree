@@ -5,7 +5,7 @@ from .models import Things, Category
 
 class ThingsSitemap(Sitemap):
     priority = 0.5
-    changefreq = 'daily'
+    changefreq = "daily"
 
     def items(self):
         return Things.objects.all()
@@ -13,9 +13,10 @@ class ThingsSitemap(Sitemap):
     def lastmod(self, obj):
         return obj.updated
 
+
 class CategoriesSitemap(Sitemap):
     priority = 0.5
-    changefreq = 'daily'
+    changefreq = "daily"
 
     def items(self):
         return Category.objects.all()

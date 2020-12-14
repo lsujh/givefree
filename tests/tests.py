@@ -10,16 +10,10 @@ from users.models import TemporaryBanIp
 
 User = get_user_model()
 
-@pytest.mark.asyncio
-async def test_user_create(create_user):
-    user = await create_user(email='super@test.com')
-    assert user.objects.count() == 1
-
-
-# @pytest.mark.django_db
-# def test_user_create():
-#     User.objects.create_user('user@test.com', 'password')
-#     assert User.objects.count() == 1
+@pytest.mark.django_db
+def test_user_create():
+    User.objects.create_user('user@test.com', 'password')
+    assert User.objects.count() == 1
 
 @pytest.mark.django_db
 def test_auth_view(create_user, auto_login_user):
@@ -97,9 +91,16 @@ def test_ip_str():
     ip = TemporaryBanIp.objects.create(ip_address='0.0.0.0', time_unblock=timezone.now())
     assert ip.__str__() == '0.0.0.0'
 
-# @pytest.mark.django_db
-# def test_password_reset(create_user):
-#     user = create_user(email='reset@test.com')
+@pytest.mark.django_db
+def test_password_reset(client, create_user):
+    user = create_user(email='reset@test.com')
+    url = reverse('users:password_reset')
+    resp = client.get(url, data={'email': 'email@email.com'})
+    assert resp.status_code == 200
+    assert 'Перевстановлення паролю'.encode() in resp.content
+
+
+
 
 # @pytest.mark.django_db
 # @pytest.mark.parametrize('param', [

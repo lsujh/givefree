@@ -16,85 +16,91 @@ from comments.views import add_comment
 @require_GET
 def robots_txt(request):
     lines = [
-        'User-Agent: *',
-        'Disallow: /admin/',
-        'Disallow: /account/',
-        'Disallow: /orders/',
-        'Disallow: /coupons/',
-        'Disallow: /cart/',
-        'Disallow: /badwordfilter/',
-        'Disallow: /likes/',
+        "User-Agent: *",
+        "Disallow: /admin/",
+        "Disallow: /account/",
+        "Disallow: /orders/",
+        "Disallow: /coupons/",
+        "Disallow: /cart/",
+        "Disallow: /badwordfilter/",
+        "Disallow: /likes/",
     ]
-    return HttpResponse("\n".join(lines), content_type='text/plain')
+    return HttpResponse("\n".join(lines), content_type="text/plain")
 
 
 def things_list(request, category_slug=None, category_pk=None):
-    request.session['referer'] = request.build_absolute_uri()
-    request.session.pop('form_error', None)
+    request.session["referer"] = request.build_absolute_uri()
+    request.session.pop("form_error", None)
     category = None
     categories = Category.objects.all()
     things = Things.objects.filter(is_active=True, quantity__gt=0)
     count = things.count()
     breadcrumb = category
-    if request.GET.get('q'):
-        query = request.GET.get('q')
-        things = Things.objects.filter(Q(name__icontains=query) | Q(description__icontains=query) |
-                                       Q(category__name__icontains=query))
-        data = {'category': category,
-                       'nodes': categories,
-                       'things': things,
-                       'count': count,
-                       'breadcrumb': breadcrumb
-                       }
+    if request.GET.get("q"):
+        query = request.GET.get("q")
+        things = Things.objects.filter(
+            Q(name__icontains=query)
+            | Q(description__icontains=query)
+            | Q(category__name__icontains=query)
+        )
+        data = {
+            "category": category,
+            "nodes": categories,
+            "things": things,
+            "count": count,
+            "breadcrumb": breadcrumb,
+        }
     else:
         if category_slug and category_pk:
-            category = get_object_or_404(Category, pk=category_pk).get_descendants(include_self=True)
+            category = get_object_or_404(Category, pk=category_pk).get_descendants(
+                include_self=True
+            )
             things = things.filter(category__in=category)
             breadcrumb = category[0].get_ancestors(include_self=True)
-        data = {'category': category,
-                       'nodes': categories,
-                       'things': things,
-                       'count': count,
-                       'breadcrumb': breadcrumb
-                       }
+        data = {
+            "category": category,
+            "nodes": categories,
+            "things": things,
+            "count": count,
+            "breadcrumb": breadcrumb,
+        }
     paginator = Paginator(things, 12)
-    page = request.GET.get('page')
+    page = request.GET.get("page")
     try:
         things = paginator.page(page)
     except PageNotAnInteger:
         things = paginator.page(1)
     except EmptyPage:
         things = paginator.page(paginator.num_pages)
-    data.update({'page': page, 'things': things})
-    return render(request, 'freestuff/list.html', data)
+    data.update({"page": page, "things": things})
+    return render(request, "freestuff/list.html", data)
 
 
 def thing_detail(request, pk, slug):
     context = {}
-    views.like_dislike(request)
-    request.session['referer'] = request.build_absolute_uri()
-    context['thing'] = get_object_or_404(Things, pk=pk, slug=slug)
-    context['meta'] = context['thing'].as_meta()
-    context['cart_thing_form'] = CartAddThingForm(initial={'price': context['thing'].price})
-    context['breadcrumb'] = context['thing'].category.get_ancestors(include_self=True)
-    context['comments'] = context['thing'].comments.filter(active=True)
-    if not context['thing'].price:
-        context['cart_thing_form'].fields['price'].widget.attrs['readonly'] = False
-        context['cart_thing_form'].fields['price'].__dict__['help_text'] = 'Введіть ціну, яку Ви готові заплатити'
+    if request.GET:
+        views.like_dislike(request)
+    request.session["referer"] = request.build_absolute_uri()
+    context["thing"] = get_object_or_404(Things, pk=pk, slug=slug)
+    context["meta"] = context["thing"].as_meta()
+    context["cart_thing_form"] = CartAddThingForm(
+        initial={"price": context["thing"].price}
+    )
+    context["breadcrumb"] = context["thing"].category.get_ancestors(include_self=True)
+    context["comments"] = context["thing"].comments.filter(active=True)
+    if not context["thing"].price:
+        context["cart_thing_form"].fields["price"].widget.attrs["readonly"] = False
+        context["cart_thing_form"].fields["price"].__dict__[
+            "help_text"
+        ] = "Введіть ціну, яку Ви готові заплатити"
     r = Recommender()
-    context['recommended_things'] = r.suggest_things_for([context['thing']], 4)
-    if request.method == 'POST':
-        add_comment(request, context['thing'], context['comments'])
+    context["recommended_things"] = r.suggest_things_for([context["thing"]], 4)
+    if request.method == "POST":
+        add_comment(request, context["thing"], context["comments"])
 
     data = {}
     if request.user.is_authenticated:
-        data['email'] = request.user.email
-        data['author'] = request.user.full_name()
-    context['form'] = CommentForm(initial=data)
-    return render(request, 'freestuff/detail.html', context)
-
-
-
-
-
-
+        data["email"] = request.user.email
+        data["author"] = request.user.full_name()
+    context["form"] = CommentForm(initial=data)
+    return render(request, "freestuff/detail.html", context)

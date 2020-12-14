@@ -4,14 +4,13 @@ from django.db import models
 
 
 class ListField(models.TextField):
-
     def __init__(self, *args, **kwargs):
-        self.token = kwargs.pop('token', ',')
+        self.token = kwargs.pop("token", ",")
         super().__init__(*args, **kwargs)
 
     def deconstruct(self):
         name, path, args, kwargs = super().deconstruct()
-        kwargs['token'] = self.token
+        kwargs["token"] = self.token
         return name, path, args, kwargs
 
     def to_python(self, value):
@@ -35,7 +34,7 @@ class ListField(models.TextField):
     def get_prep_value(self, value):
         if not value:
             return
-        assert(isinstance(value, Iterable))
+        assert isinstance(value, Iterable)
         return self.token.join(set(value))
 
     def value_to_string(self, obj):

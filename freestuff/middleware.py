@@ -1,10 +1,11 @@
 from django.utils.deprecation import MiddlewareMixin
 
+
 class MultipleProxyMiddleware(MiddlewareMixin):
     FORWARDED_FOR_FIELDS = [
-        'HTTP_X_FORWARDED_FOR',
-        'HTTP_X_FORWARDED_HOST',
-        'HTTP_X_FORWARDED_SERVER',
+        "HTTP_X_FORWARDED_FOR",
+        "HTTP_X_FORWARDED_HOST",
+        "HTTP_X_FORWARDED_SERVER",
     ]
 
     def process_request(self, request):
@@ -14,6 +15,6 @@ class MultipleProxyMiddleware(MiddlewareMixin):
         """
         for field in self.FORWARDED_FOR_FIELDS:
             if field in request.META:
-                if ',' in request.META[field]:
-                    parts = request.META[field].split(',')
+                if "," in request.META[field]:
+                    parts = request.META[field].split(",")
                     request.META[field] = parts[-1].strip()

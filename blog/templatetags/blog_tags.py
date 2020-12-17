@@ -10,39 +10,49 @@ from ..models import Post, PostStatistic, Category
 
 register = template.Library()
 
+
 @register.simple_tag
 def total_posts():
     return Post.published.count()
 
-@register.inclusion_tag('blog/post/category_posts.html')
+
+@register.inclusion_tag("blog/post/category_posts.html")
 def show_category_posts():
     categories = Category.objects.all()
-    return {'categories': categories}
+    return {"categories": categories}
 
 
-@register.inclusion_tag('blog/post/latest_posts.html')
+@register.inclusion_tag("blog/post/latest_posts.html")
 def show_latest_posts(count=5):
-    latest_posts = Post.published.order_by('-publish')[:count]
-    return {'latest_posts': latest_posts}
+    latest_posts = Post.published.order_by("-publish")[:count]
+    return {"latest_posts": latest_posts}
 
-@register.inclusion_tag('blog/post/popular_posts.html')
+
+@register.inclusion_tag("blog/post/popular_posts.html")
 def show_popular_posts(count=5):
-    popular_posts = PostStatistic.objects.filter(date__range=
-                                           [timezone.now() - timezone.timedelta(7), timezone.now()]).values(
-        'post__slug', 'post__title', 'post__publish').annotate(views=Sum('views')).order_by('-views')[:count]
+    popular_posts = (
+        PostStatistic.objects.filter(
+            date__range=[timezone.now() - timezone.timedelta(7), timezone.now()]
+        )
+        .values("post__slug", "post__title", "post__publish")
+        .annotate(views=Sum("views"))
+        .order_by("-views")[:count]
+    )
     for pop in popular_posts:
-        pop['date'] = [int(i) for i in pop['post__publish'].strftime("%Y.%m.%d").split('.')]
-    return {'popular_posts': popular_posts}
+        pop["date"] = [
+            int(i) for i in pop["post__publish"].strftime("%Y.%m.%d").split(".")
+        ]
+    return {"popular_posts": popular_posts}
 
 
 @register.simple_tag
 def get_most_commented_posts(count=5):
-    return Post.published.annotate(
-               total_comments=Count('comments')
-           ).order_by('-total_comments')[:count]
+    return Post.published.annotate(total_comments=Count("comments")).order_by(
+        "-total_comments"
+    )[:count]
 
 
-@register.filter(name='markdown')
+@register.filter(name="markdown")
 def markdown_format(text):
     return mark_safe(markdown.markdown(text))
 

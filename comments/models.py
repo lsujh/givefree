@@ -30,5 +30,5 @@ class Comment(MPTTModel):
         order_insertion_by = ['-published']
 
     def __str__(self):
-        return f'{self.author} {self.thing}'
+        return f'{self.author}'
 

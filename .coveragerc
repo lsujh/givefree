@@ -1,5 +1,7 @@
 [run]
 omit =
+  *asgi.py,
+  *wsgi.py,
   *apps.py,
   *migrations/*,
   *settings*,

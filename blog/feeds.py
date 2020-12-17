@@ -4,9 +4,9 @@ from .models import Post
 
 
 class LatestPostsFeed(Feed):
-    title = 'My blog'
-    link = '/blog/'
-    description = 'New posts of my blog.'
+    title = "My blog"
+    link = "/blog/"
+    description = "New posts of my blog."
 
     def items(self):
         return Post.published.all()[:5]
@@ -18,4 +18,4 @@ class LatestPostsFeed(Feed):
         if item.description:
             return item.description
         str = '<p>Стаття вперше з\'явилась на <a href="http://things-for-your-price.pp.ua/">Практиче рукоділля</a></p>'
-        return f'{truncatewords(item.body, 30)} {str}'
+        return f"{truncatewords(item.body, 30)} {str}"

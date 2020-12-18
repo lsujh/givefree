@@ -10,6 +10,7 @@ from blog.models import Category as cat_blog, Post
 from comments.models import Comment
 from coupons.models import Coupon
 from likes.models import LikeDislike
+from orders.models import Order
 
 
 @pytest.fixture
@@ -97,9 +98,26 @@ def create_coupon(db):
     return make_coupon
 
 @pytest.fixture
-def create_like(db):
+def create_like(db, create_thing, create_category, create_user, create_comment):
     def make_like(**kwargs):
         kwargs['vote'] = 0
+        # kwargs['user'] = create_user(email='user@email.com', email_confirm=True)
+        category = create_category(name='Dress')
+        thing = create_thing(name="Skirt", category=category)
+        comment = create_comment(content='документация на русском языке', content_object = thing)
+        kwargs['content_object'] = comment
         return LikeDislike.objects.create(**kwargs)
     return make_like
 
+@pytest.fixture
+def create_order(db):
+    def make_order(**kwargs):
+        kwargs['first_name'] = 'Ivan'
+        kwargs['last_name'] = 'Ivanov'
+        kwargs['email'] = 'user@email.com'
+        kwargs['phone'] = 9999999999
+        kwargs['city'] = 'Kiev'
+        kwargs['shipping'] = 'Ukrposhta'
+        kwargs['status'] = 'Created'
+        return Order.objects.create(**kwargs)
+    return make_order

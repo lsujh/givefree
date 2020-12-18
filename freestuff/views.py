@@ -78,6 +78,7 @@ def things_list(request, category_slug=None, category_pk=None):
 
 def thing_detail(request, pk, slug):
     context = {}
+    print(request.META.get('HTTP_REFERER'))
     if request.GET:
         views.like_dislike(request)
     request.session["referer"] = request.build_absolute_uri()

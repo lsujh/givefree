@@ -9,8 +9,6 @@ from freestuff.recommender import Recommender
 
 @require_POST
 def cart_add(request, thing_pk):
-    if '_delete' in request.POST:
-        return cart_remove(request, thing_pk)
     request.session.pop('form_error', None)
     cart = Cart(request)
     thing = get_object_or_404(Things, pk=thing_pk)
@@ -20,13 +18,12 @@ def cart_add(request, thing_pk):
         cd = form.cleaned_data
         cart.add(request, thing=thing, quantity=cd['quantity'], update_quantity=cd['update'], price=str(cd['price']))
     else:
+        request.session['form_error'] = form.errors['quantity'][0]
         request.session['pk'] = thing.pk
-        request.session['form_error'] = (thing.pk, form.errors['quantity'][0])
         request.session['slug'] = thing.slug
 
     return redirect('cart:cart_detail')
 
-@require_POST
 def cart_remove(request, thing_pk):
     cart = Cart(request)
     thing = get_object_or_404(Things, pk=thing_pk)
@@ -41,7 +38,7 @@ def cart_detail(request):
         return redirect('freestuff:things_list')
     for item in cart:
         item['update_quantity_form'] = CartAddThingForm(
-            initial={'quantity': item['quantity'], 'update': True, 'price': item['price'],})
+            initial={'quantity': item['quantity'], 'update': True, 'price': item['price']})
         if not item['thing_price']:
             item['update_quantity_form'].fields['price'].widget.attrs['readonly'] = False
     coupon_apply_form = CouponApplyForm()

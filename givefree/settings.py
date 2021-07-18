@@ -39,22 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'bootstrap4',
     'mptt',
-    'easy_thumbnails',
 
     'freestuff.apps.FreestuffConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'coupons.apps.CouponsConfig',
-]
 
-THUMBNAIL_ALIASES = {
-    '': {
-        'mini': {'size': (100, 100), 'crop': True},
-        'avatar': {'size': (200, 200), 'crop': True},
-        'small': {'size': (300, 300), 'crop': True},
-        'large': {'size': (800, 800), 'crop': True},
-    },
-}
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -82,7 +73,6 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'cart.context_processors.cart',
-                'cart.context_processors.cart_pk',
             ],
         },
     },

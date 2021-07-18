@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Things, Images
+from .models import Category, Things
 from mptt.admin import MPTTModelAdmin, TreeRelatedFieldListFilter
 
 
@@ -10,10 +10,6 @@ class CategoryAdmin(MPTTModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
-class ImagesInline(admin.StackedInline):
-    model = Images
-
-
 class ThingsAdmin(admin.ModelAdmin):
     ordering = ['-created']
     list_display = ('name', 'category', 'quantity', 'price', 'created', 'is_active', 'id')
@@ -21,7 +17,6 @@ class ThingsAdmin(admin.ModelAdmin):
     list_editable = ('is_active', 'quantity', 'price')
     prepopulated_fields = {'slug': ('name',)}
     list_filter = (('category', TreeRelatedFieldListFilter),)
-    inlines = [ImagesInline]
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Things, ThingsAdmin)

@@ -1,8 +1,8 @@
 from django.urls import path, re_path, reverse_lazy
 from django.contrib.auth import views as auth_views
 
-from .views import activate_user_account, signup, profile, CustomLoginView, PasswordReset
-
+from .views import activate_user_account, signup, profile, CustomLoginView, PasswordReset, \
+    HistoryOrdersView
 
 app_name = 'users'
 
@@ -27,5 +27,5 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='registration/password_confirmed.html'), name='password_reset_complete'),
     path('profile/', profile, name='profile'),
-
+    path('history_orders/', HistoryOrdersView.as_view(), name='history_orders'),
 ]

@@ -33,4 +33,4 @@ admin.site.register(CustomUser, CustomUserAdmin)
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ('phone', 'street', 'postal_code', 'city')
+    list_display = ('phone', 'address', 'postal_code', 'city')

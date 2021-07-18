@@ -64,8 +64,7 @@ def profile(request):
             profile_form.save()
             messages.success(request, 'Your profile was successfully updated!')
             return render(request, 'profile.html', {'user_form': user_form,
-                                                    'profile_form': profile_form,
-                                                    })
+                                                    'profile_form': profile_form})
         else:
             messages.error(request, 'Please correct the error below.')
     else:
@@ -75,13 +74,13 @@ def profile(request):
                                                      'profile_form': profile_form})
 
 
-# class HistoryOrdersView(ListView):
-#     model = Order
-#     template_name = 'history_orders.html'
-#
-#     def get_queryset(self):
-#         queryset = Order.objects.filter(user=self.request.user.id)
-#         return queryset
+class HistoryOrdersView(ListView):
+    model = Order
+    template_name = 'history_orders.html'
+
+    def get_queryset(self):
+        queryset = Order.objects.filter(user=self.request.user.id)
+        return queryset
 
 class CustomLoginView(LoginView):
     form_class = CustomAuthenticationForm

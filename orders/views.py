@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
 from django.http import HttpResponse
 from django.conf import settings
+from django.db.models import F
 
 
 
@@ -13,6 +14,7 @@ from .forms import OrderCreateForm
 from cart.cart import Cart
 from .tasks import order_created
 from users.models import Profile, CustomUser
+from freestuff.models import Things
 
 
 @staff_member_required
@@ -23,11 +25,13 @@ def admin_order_detail(request, order_id):
 def order_create(request):
     cart = Cart(request)
     form = OrderCreateForm()
+    data = None
     if request.user.is_authenticated:
         data = Profile.objects.prefetch_related('user').get(user=request.user)
         data = {'first_name': data.user.first_name, 'last_name': data.user.last_name,
-                'email': data.user.email, 'phone': data.phone, 'address': data.address,
-                'postal_code': data.postal_code, 'city': data.city}
+                'email': data.user.email, 'phone': data.phone, 'street': data.street,
+                'postal_code': data.postal_code, 'city': data.city, 'region': data.region,
+                'province': data.province,}
         form = OrderCreateForm(data)
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
@@ -41,7 +45,33 @@ def order_create(request):
                     order=order, thing=item['thing'],
                     quantity=item['quantity'],
                     price=item['price'])
+                Things.objects.filter(pk=item['pk']).update(quantity=F('quantity') - item['quantity'])
             cart.clear()
+            if data:
+                data['first_name'] = cd['first_name'] if not data['first_name'] \
+                                    or (data['first_name'] != cd['first_name']) else data['first_name']
+                data['last_name'] = cd['last_name'] if not data['last_name'] \
+                                    or (data['last_name'] != cd['last_name'])else data['last_name']
+                data['phone'] = cd['phone'] if not data['phone'] \
+                                    or (data['phone'] != cd['phone']) else data['phone']
+                data['street'] = cd['street'] if not data['street'] \
+                                    or (data['street'] != cd['street']) else data['street']
+                data['city'] = cd['city'] if not data['city'] \
+                                    or (data['city'] != cd['city']) else data['city']
+                data['region'] = cd['region'] if not data['region'] \
+                                    or (data['region'] != cd['region']) else data['region']
+                data['province'] = cd['province'] if not data['province'] \
+                                    or (data['province'] != cd['province']) else data['province']
+                data['postal_code'] = cd['postal_code'] if not data['postal_code'] \
+                                    or (data['postal_code'] != cd['postal_code']) else data['postal_code']
+                Profile.objects.filter(user=request.user).update(phone=data['phone'], street=data['street'],
+                                                                 city=data['city'], region=data['region'],
+                                                                 province=data['province'],postal_code=data['postal_code'],
+                                                                 )
+                CustomUser.objects.filter(id=request.user.id).update(first_name=data['first_name'], last_name=data['last_name'],
+                                                                     )
+
+
             # order_created.delay(order.id)
             return render(request, 'orders/created.html', {'order': order})
 

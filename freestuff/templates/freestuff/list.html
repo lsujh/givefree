@@ -1,45 +1,115 @@
 {% extends "base.html" %}
 {% load mptt_tags %}
 {% load static %}
+{% load thumbnail %}
+{% load bootstrap4 %}
 
 {% block title %}
-    {% if category %}{{ category.name }}{% else %}Речі{% endif %}
+{% if category %}{{ category.name }}{% else %}Речі{% endif %}
 {% endblock %}
 
 {% block content %}
-    <div id="sidebar">
-        <h3>Категорії</h3>
-        <ul>
-            <li>
-                <a href="{% url 'freestuff:things_list' %}">Всі категорії ({{ count }})</a>
-            </li>
-        </ul>
-        <ul class="root">
-            {% recursetree nodes %}
-            {% if node.items_count %}
+<div class="container-fluid mt-5">
+    <div class="row">
+        <div class="col-sm-3 offset-md-9">
+            {% include 'freestuff/index.html' %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3">
+            <h3>Категорії</h3>
+            <ul>
+                <li>
+                    <a href="{% url 'freestuff:things_list' %}">Всі категорії ({{ count }})</a>
+                </li>
+            </ul>
+            <ul>
+                {% recursetree nodes %}
+                {% if node.items_count %}
                 <li> <a href="{{ node.get_absolute_url }} ">{{ node.name }}
                     <span>({{ node.items_count }})</span></a>
                     {% if not node.is_leaf_node %}
-                        <ul class="children">
-                                <a href="{{ children.det_absolute_url }}"> {{ children }}</a>
-                        </ul>
+                    <ul>
+                        <a href="{{ children.det_absolute_url }}"> {{ children }}</a>
+                    </ul>
                     {% endif %}
                 </li>
-            {% endif %}
-            {% endrecursetree %}
-        </ul>
-    </div>
-    <div id="main" class="product-list">
-        <h3>{% for crumb in breadcrumb %}
-            <a href="{{ crumb.get_absolute_url }}"> {{ crumb }} </a> &#10149; {% endfor %}</h3>
-        {% for thing in things %}
-            <div class="item">
-                <a href="{{ thing.get_absolute_url }}">
-                    <img src="{% if thing.image %}{{ thing.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
-                </a>
-                <a href="{{ thing.get_absolute_url }}">{{ thing.name }}</a><br>
-                {{ thing.quantity }}
+                {% endif %}
+                {% endrecursetree %}
+            </ul>
+        </div>
+        <div class="col-sm-9 item">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    {% for crumb in breadcrumb %}
+                    <li class="breadcrumb-item"> <a href="{{ crumb.get_absolute_url }}"> {{ crumb }} </a> </li>
+                    {% endfor %}
+                </ol>
+            </nav>
+            <div class="row">
+                {% for thing in things %}
+                <div class="col-sm-3 item">
+                    <a href="{{ thing.get_absolute_url }}">
+                    {% if thing.images.all %}
+                    {% for image in thing.images.all %}
+                    {% if image.main %}
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="img-wrap">
+                                    <img src="{{ image.image|thumbnail_url:'avatar' }}" class="rounded img-thumbnail img-fluid"
+                                         width="200" height="200">
+                                    <span class="p-3 font-italic text-info text-center">
+                                    {% if thing.pk in cart_pk %}
+                                    Ця річ вже є в Вашому кошику
+                                    {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                    {% endif %}
+                    {% endfor %}
+                    {% else %}
+                    <div class="container-fluid">
+                            <div class="row">
+                                <div class="img-wrap">
+                    <img src="{% static 'img/no_image.png' %}" class="img-fluid" width="200" height="200">
+                                    <span class="p-3 font-italic text-info text-center">
+                                    {% if thing.pk in cart_pk %}
+                                    Ця річ вже є в Вашому кошику
+                                    {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="text-center mt-1">
+                        {{ thing.name }}
+                    </div>
+                    </a>
+                    <div class="mt-1">
+                        {% if thing.size %}
+                        Розмір - {{ thing.size }}
+                        {% endif %}
+                    </div>
+                    <div class="mt-1">
+                        Ціна, грн. - {{ thing.price }}
+                    </div>
+                    <div class="mt-1">
+                        <small>  {{ thing.description|truncatewords:10 }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+
             </div>
-        {% endfor %}
+        </div>
     </div>
+</div>
+<div class="container-fluid m-5 p-5">
+    <div class="row m-5">
+        <div class="offset-md-4">
+            {% include "pagination.html" with page=things %}
+        </div>
+    </div>
+</div>
 {% endblock %}

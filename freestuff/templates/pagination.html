@@ -1,0 +1,22 @@
+
+<div class="pagination">
+  <span class="page-item m-2">
+    {% if page.has_previous %}
+    <a class="m-2" href="?q={{ request.GET.q }}&page=1">&laquo; Перша </a>
+      <a class="" href="?q={{ request.GET.q }}&page={{ page.previous_page_number }}">Попередня</a>
+    {% endif %}
+    <span>
+      {% for num in things.paginator.page_range %}
+        {% if num == things.number %}
+            <span class="page-item m-2"><b>{{ num }}</b></span>
+        {% else %}
+            <a class="m-2" href="?q={{ request.GET.q }}&page={{ num }}"> {{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    <span class="page-item m-2">
+      {% if page.has_next %}
+        <a href="?q={{ request.GET.q }}&page={{ page.next_page_number }}">Наступна</a>
+      <a class="m-2" href="?q={{ request.GET.q }}&page={{ things.paginator.num_pages }}"> Остання &raquo;</a>
+      {% endif %}
+  </span>
+</div>

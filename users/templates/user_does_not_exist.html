@@ -1,23 +1,16 @@
 {% extends 'base.html' %}
 
-
 {% block head %}
-<title>'User`s verification'</title>
+<title>Перевірка користувача</title>
 {% endblock head %}
 
 {% block content %}
-<section class="main user_does_not_exist container-fluid d-flex align-items-center">
-    <div class="container justify-content-center py-4 py-md-0 mt-4">
-        <h1 class="text-center">trans "User does not exist"</h1>
-        <p>
-            User does not exist. We checked our database and unfortunately did not find you in it.Please go through the
-            <a href="{% url 'users:signup' %}">'registration process'</a>.
-            'Or contact with our'
-
-            'customer service'
-            </a>.
-        </p>
-    </div>
+<div class="container justify-content-center mt-4">
+    <h3 class="text-center">Такого користовача не існує</h3>
+    <p>
+        Користувача не існує. Ми перевірили нашу базу даних і, на жаль, не знайшли вас у ній.
+        <a href="{% url 'users:signup' %}">Пройдіть процедуру реєстрації</a>.
+        Або зв’яжіться з нашою службою обслуговування клієнтів.
+    </p>
 </div>
-</section>
 {% endblock content %}

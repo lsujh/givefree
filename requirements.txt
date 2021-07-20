@@ -5,5 +5,5 @@ django-mptt==0.11.0
 django-redis==4.11.0
 Pillow==7.1.2
 whitenoise==5.0.1
-wheel==0.34.2
+wheel
 psycopg2-binary

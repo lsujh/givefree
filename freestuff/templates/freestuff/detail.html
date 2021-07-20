@@ -1,95 +1,42 @@
 {% extends "base.html" %}
-{% load mptt_tags %}
 {% load static %}
-{% load thumbnail %}
-
 {% block title %}
 {{ thing.name }}
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid" style="margin-top:50px">
-    <div class="row">
-        <div class="col-sm-2 offset-md-9"></div>
-        <div class="col-sm-3">
-            {% include 'freestuff/index.html' %}
+<h3>{% for crumb in breadcrumb %}
+<a href="{{ crumb.get_absolute_url }}">
+    {{ crumb }}</a> &#10149; {% endfor %}</h3>
+<div class="product-detail">
+    <img src="{% if thing.image %}{{ thing.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}">
+    <h1>{{ thing.name }}{{ name }}</h1>
+
+    {{ thing.quantity }}
+    <div class="price">
+    <form action="{% url 'cart:cart_add' thing.pk %}" method="post">
+     <div>   {{ request.session.form_error }}
+         {{ cart_thing_form.quantity }}</div>
+    {{ cart_thing_form.price }}
+    {% csrf_token %}
+    <input type="submit" value="{{ 'Додати в кошик' }}">
+    </form></div>
+
+    {{ thing.description|linebreaks }}
+
+    {% if recommended_things %}
+    <div class="recommendations">
+        <h3>{{ "Люди купують це разом" }}</h3>
+        {% for p in recommended_things %}
+        <div class="item">
+            <a href="{{ p.get_absolute_url }}">
+                <img src="{% if p.image %}{{ p.image.url }}{% else %}
+          {% static  'img/no_image.png' %}{% endif %}">
+            </a>
+            <p><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></p>
         </div>
+        {% endfor %}
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    {% for crumb in breadcrumb %}
-                    <li class="breadcrumb-item">
-                        <a href="{{ crumb.get_absolute_url }}">{{ crumb }}</a> </li>
-                    {% endfor %}
-                </ol>
-            </nav>
-            <div class="row">
-                <div class="col-sm-4">
-                    {% if thing.images.all %}
-                    {% for image in thing.images.all %}
-                    {% if image.main %}
-                    <div class="row m-1 p-1">
-                        <a data-fancybox="gallery" href="{{ image.image|thumbnail_url:'large' }}">
-                            <img src="{{ image.image|thumbnail_url:'small' }}" class="rounded img-fluid" >
-                        </a>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                    {% for image in thing.images.all %}
-                    {% if not image.main %}
-                    <a data-fancybox="gallery" href="{{ image.image|thumbnail_url:'large' }}">
-                        <img src="{{ image.image|thumbnail_url:'mini' }}" class="rounded img-fluid">
-                    </a>
-                    {% endif %}
-                    {% endfor %}
-                    {% else %}
-                    <img src="{% static 'img/no_image.png' %}" class="img-fluid">
-                    {% endif %}
-                </div>
-                <div class="col-sm-8">
-                    <h3>{{ thing.name }}</h3>
-                    <div class="mb-2">
-                        {% if thing.size %}
-                    Розмір:  {{ thing.size }}
-                    {% endif %}
-                    </div>
-                    <div>
-                        <form action="{% url 'cart:cart_add' thing.pk %}" method="post">
-                            <div class="form-group">
-                                {{ cart_thing_form.price.label }}
-                                {{ cart_thing_form.price }}
-                                <div class="d-none">{{ cart_thing_form.quantity }}</div>
-                                {% csrf_token %}
-                                {% if thing.pk in cart_pk %}
-                                <p class="mt-3 font-italic text-info">Ця річ вже є в Вашому кошику
-                                <a href="{% url 'cart:cart_detail' %}">перейти в кошик</a>.
-                                </p>
-                                {% else %}
-                                <input type="submit" class="btn btn-outline-primary" value="Додати в кошик">
-                                {% endif %}
-                            </div>
-                        </form>
-                    </div>
-                    {{ thing.description|linebreaks }}
-                    {% if recommended_things %}
-                    <div class="recommendations">
-                        <h3>Люди купують це разом</h3>
-                        {% for p in recommended_things %}
-                        <div class="item">
-                            <a href="{{ p.get_absolute_url }}">
-                                <img src="{% if p.image %}{{ p.image.url }}{% else %}
-                                 {% static  'img/no_image.png' %}{% endif %}">
-                            </a>
-                            <p><a href="{{ p.get_absolute_url }}">{{ p.name }}</a></p>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
+    {% endif %}
 </div>
 {% endblock %}

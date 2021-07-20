@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 
+
 {% block head %}
-<title>Перевірка користувача</title>
+<title>'User`s verification'</title>
 {% endblock head %}
 
-{% block title %}Вийшов з системи{% endblock title %}
+{% block title %}'Logged out'{% endblock title %}
 
 {% block content %}
 <div class="container mt-4 mb-4">
-    <h3 class="text-center">Вийшов з системи</h3>
+    <h1 class="text-center">'Logged out'</h1>
     <div class="text-center">
-        <p>Ви успішно вийшли з системи. Ви можете<a href="{% url 'users:login' %}"> ввійти знову.</a></p>
+        <p>'You have been successfully logged out. You can' <a href="{% url 'users:login' %}"> 'log in again'.</a></p>
     </div>
 </div>
 {% endblock content %}

@@ -1,14 +1,18 @@
 {% load static %}
+{% load mptt_tags %}
 
-{% with total_items=cart|length %}
-{% if cart|length > 0 %}
-Ваш кошик:
-<a href="{% url 'cart:cart_detail' %}">
-    {{ total_items }} шт. ,
-    на {{ cart.get_total_price }} грн.</a>
-{% else %}
-Ваш кошик порожній.
-{% endif %}
-{% endwith %}
-
+{% block content %}
+    <div >
+        {% with total_items=cart|length %}
+        {% if cart|length > 0 %}
+        Ваш кошик:
+        <a href="{% url 'cart:cart_detail' %}">
+            {{ total_items }} шт. ,
+            на {{ cart.get_total_price }} грн.</a>
+        {% else %}
+        Ваш кошик порожній.
+        {% endif %}
+        {% endwith %}
+    </div>
+    {% endblock %}
 

@@ -1,27 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block head %}
+<title>Історія замовлень</title>
+{% endblock head %}
 {% block content %}
-<h3>Історія замовлень</h3>
-<div class="table-responsive">
-<table class="table table-striped table-borderless">
-    <thead class="thead-light">
-    <tr>
-        <th>№</th>
-        <th>І'мя</th>
-        <th>Прізвище</th>
-        <th>Створений</th>
-        <th>Статус</th>
-        <th>Сума</th>
-    </tr>
-    </thead>
-    {% for order in orders %}
-    <tr>
-        <td>{{ order.id }}</td>
-        <td>{{ order.first_name }}</td>
-        <td>{{ order.last_name }}</td>
-        <td>{{ order.created }}</td>
-        <td>{{ order.status }}</td>
-        <td>{{ order.get_total_cost }}</td>
-    </tr>
-    {% endfor %}
-</table>
-</div>
-{% endblock content %}
+    <h1>Історія замовлень</h1>
+<ul>
+    {% for order in object_list %}
+    <li>
+{{ order.first_name }}
+{{ order.last_name }}
+    </li>
+{% endfor %}
+</ul>
+ {% endblock content %}

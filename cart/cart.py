@@ -22,7 +22,6 @@ class Cart(object):
         things = Things.objects.filter(id__in=thing_ids)
         cart = self.cart.copy()
         for thing in things:
-            cart[str(thing.id)]['pk'] = thing.id
             cart[str(thing.id)]['thing'] = thing
             cart[str(thing.id)]['thing_price'] = thing.price
             cart[str(thing.id)]['thing_quantity'] = thing.quantity
@@ -40,9 +39,12 @@ class Cart(object):
         if thing_id not in self.cart:
             self.cart[thing_id] = {'quantity': 0, 'price': str(0)}
         if update_quantity:
+            Things.objects.filter(pk=thing.pk).update(quantity=F('quantity') - quantity +
+                                                               self.cart[thing_id]['quantity'])
             self.cart[thing_id]['quantity'] = quantity
             self.cart[thing_id]['price'] = price
         else:
+            Things.objects.filter(pk=thing.pk).update(quantity=F('quantity') - quantity)
             self.cart[thing_id]['quantity'] += quantity
             self.cart[thing_id]['price'] = price
 
@@ -54,6 +56,7 @@ class Cart(object):
     def remove(self, thing):
         thing_id = str(thing.id)
         if thing_id in self.cart:
+            Things.objects.filter(pk=thing.pk).update(quantity=F('quantity') + self.cart[thing_id]['quantity'])
             del self.cart[thing_id]
             self.save()
 

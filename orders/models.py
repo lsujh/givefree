@@ -26,11 +26,9 @@ class Order(models.Model):
     last_name = models.CharField(verbose_name='Прізвище', max_length=30)
     email = models.EmailField(verbose_name='Email')
     phone = models.PositiveIntegerField(verbose_name='Номер телефону')
-    street = models.CharField(verbose_name='Вулиця', max_length=50, null=True, blank=True)
+    address = models.CharField(verbose_name='Адреса', max_length=250, null=True, blank=True)
     postal_code = models.CharField(verbose_name='Індекс', max_length=20, null=True, blank=True)
-    city = models.CharField(verbose_name='Місто/село', max_length=50)
-    region = models.CharField(verbose_name='Район', max_length=50, blank=True, null=True)
-    province = models.CharField(verbose_name='Область', max_length=50, blank=True, null=True)
+    city = models.CharField(verbose_name='Місто/село', max_length=100)
     shipping = models.CharField(verbose_name='Перевізник', max_length=20, choices=DELIVERY, blank=True, null=True)
     department = models.PositiveIntegerField(verbose_name='відділення Нової пошти №', blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -38,7 +36,6 @@ class Order(models.Model):
     coupon = models.ForeignKey(Coupon, related_name='orders', null=True, blank=True, on_delete=models.SET_NULL)
     status = models.CharField(verbose_name='Статус', max_length= 20, choices=ORDER_SRATUS,
                               default='Created')
-    coment = models.TextField(verbose_name='Коментар', null=True, blank=True)
 
     class Meta():
         ordering = ('-created',)

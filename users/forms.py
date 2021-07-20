@@ -18,13 +18,13 @@ class CustomUserCreationForm(UserCreationForm):
                             'placeholder': 'Повторіть пароль'}), strip=False)
     use_required_attribute = False
     class Meta(UserCreationForm):
-        model = User
+        model = get_user_model()
         fields = ('email', )
 
 
 class CustomUserChangeForm(UserChangeForm):
     class Meta(UserChangeForm):
-        model = User
+        model = get_user_model()
         fields = ('email', 'first_name', 'last_name', 'image')
 
 
@@ -51,7 +51,7 @@ class CustomAuthenticationForm(forms.Form):
         super().__init__(*args, **kwargs)
 
         # Set the max length and label for the "username" field.
-        self.username_field = User._meta.get_field(User.USERNAME_FIELD)
+        self.username_field = get_user_model()._meta.get_field(get_user_model().USERNAME_FIELD)
         username_max_length = self.username_field.max_length or 254
         self.fields['username'].max_length = username_max_length
         self.fields['username'].widget.attrs['maxlength'] = username_max_length
@@ -102,7 +102,7 @@ class UserForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ('phone', 'street', 'postal_code', 'city', 'region', 'province')
+        fields = ('phone', 'address', 'postal_code', 'city')
 
 
 

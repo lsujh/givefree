@@ -1,56 +1,26 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load bootstrap4 %}
-{% load history %}
 
 {% block head %}
-<title>Профіль</title>
+<title>'Profile'</title>
 {% endblock head %}
 {% block content %}
-<div class="container" style="margin-top:50px">
-    <nav>
-        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-            <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab"
-               href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="true">Профіль</a>
-            <a class="nav-item nav-link" href="{% url 'users:password_change' %}" aria-selected="false">
-                Змінити пароль</a>
-            <a class="nav-item nav-link" id="nav-history-tab" data-toggle="tab" href="#nav-history"
-               role="tab" aria-controls="nav-history" aria-selected="false">Історія замовлень</a>
-        </div>
-    </nav>
-    <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
-             aria-labelledby="nav-profile-tab">
-            <form method="post" action="{% url 'users:profile' %}" enctype="multipart/form-data">
-                <div class="form-group">
-                    {% bootstrap_messages %}
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-sm-5">
-                            <img src="{% if user.image %}{{ user.image.url }}{% else %}{% static 'img/no_image.png' %}{% endif %}" class="rounded-circle img-fluid"
-                                 style="width:110">
-                            <div>{% bootstrap_field user_form.image show_label=False %}</div>
-                            <div>{% bootstrap_field user_form.first_name show_label=False %}</div>
-                            <div>{% bootstrap_field user_form.last_name show_label=False %}</div>
-                        </div>
-                        <div class="col-sm-5">
-                            <div>{% bootstrap_field profile_form.phone show_label=False %}</div>
-                            <div>{% bootstrap_field profile_form.street show_label=False %}</div>
-                            <div>{% bootstrap_field profile_form.city show_label=False %}</div>
-                            <div>{% bootstrap_field profile_form.region show_label=False%}</div>
-                            <div>{% bootstrap_field profile_form.province show_label=False%}</div>
-                            <div>{% bootstrap_field profile_form.postal_code show_label=False %}</div>
-                            <button type="submit" class="btn btn-outline-primary">Зберегти</button>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab">
-            {% history_orders request %}
-        </div>
-    </div>
-</div>
-{% endblock%}
 
 
+    <h1>'Profile'</h1>
+<p><a href="{% url 'users:history_orders' %}">Історія замовлень</a> </p>
+
+    <form method="post" action="{% url 'users:profile' %}" enctype="multipart/form-data">
+      {% bootstrap_messages %}
+      {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <div>
+          <button type="submit">'Save'</button>
+        </div>
+      </div>
+    </form>
+
+
+{% endblock content %}
